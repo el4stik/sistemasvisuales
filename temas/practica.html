@@ -9,6 +9,331 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Mini Live Set Simulator Styles */
+    .live-set-container {
+      background: #0a0a0a;
+      border: 1px solid rgba(37, 212, 169, 0.2);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 3rem 0;
+    }
+
+    .top-section {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .output-monitor {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      border: 2px solid var(--accent-primary);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(37, 212, 169, 0.3);
+    }
+
+    .output-monitor canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .layers-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (max-width: 1024px) {
+      .top-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .layer-section {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .layer-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .layer-opacity {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      color: #888;
+      align-items: center;
+    }
+
+    .layer-opacity input {
+      width: 80px;
+      writing-mode: bt-lr;
+      /* IE */
+      -webkit-appearance: slider-vertical;
+      /* WebKit */
+      appearance: slider-vertical;
+      height: 80px;
+    }
+
+    /* Firefox vertical slider */
+    @-moz-document url-prefix() {
+      .layer-opacity input {
+        width: 4px;
+        height: 80px;
+        padding: 0;
+      }
+    }
+
+    .layer-opacity-val {
+      text-align: center;
+      color: var(--accent-primary);
+      font-weight: bold;
+    }
+
+    .layer-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .clips-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .clip-btn {
+      aspect-ratio: 16/9;
+      background: #000;
+      border: 1px solid #444;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .clip-btn video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+    }
+
+    .clip-btn:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+
+    .clip-btn.active {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 15px var(--accent-primary);
+    }
+
+    .clip-btn.active video {
+      opacity: 1;
+    }
+
+    .clip-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      font-size: 9px;
+      text-align: center;
+      padding: 2px 0;
+      font-weight: bold;
+    }
+
+    .effects-panel {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .effect-control {
+      margin-bottom: 1.5rem;
+    }
+
+    .effect-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+    }
+
+    .effect-slider {
+      width: 100%;
+      height: 4px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: #333;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    .effect-slider::-webkit-slider-thumb {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      background: var(--accent-primary);
+      cursor: pointer;
+      border-radius: 2px;
+      /* Square with slight rounding */
+      transition: all 0.2s;
+      border: 1px solid var(--accent-primary);
+    }
+
+    .effect-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      background: var(--accent-primary);
+      cursor: pointer;
+      border-radius: 2px;
+      border: 1px solid var(--accent-primary);
+      transition: all 0.2s;
+    }
+
+    .effect-slider:hover::-webkit-slider-thumb {
+      box-shadow: 0 0 10px var(--accent-primary);
+      transform: scale(1.15);
+    }
+
+    .effect-slider:hover::-moz-range-thumb {
+      box-shadow: 0 0 10px var(--accent-primary);
+      transform: scale(1.15);
+    }
+
+    .macro-panel {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 1.5rem;
+    }
+
+    .macro-btn {
+      width: 100%;
+      padding: 1rem;
+      background: #333;
+      border: 2px solid #444;
+      color: #888;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .macro-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .macro-btn.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #000;
+      box-shadow: 0 0 20px var(--accent-primary);
+    }
+
+    .blend-mode-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .blend-btn {
+      flex: 1;
+      padding: 0.5rem;
+      background: #333;
+      border: 1px solid #444;
+      color: #888;
+      font-size: 0.65rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .blend-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .blend-btn.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #000;
+    }
+
+    .stats-panel {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(37, 212, 169, 0.05);
+      border: 1px solid rgba(37, 212, 169, 0.2);
+      border-radius: 4px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent-primary);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .intro-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s;
+    }
+
+    .intro-card:hover {
+      border-color: rgba(37, 212, 169, 0.3);
+      background: rgba(37, 212, 169, 0.02);
+    }
+  </style>
 </head>
 
 <body>
@@ -17,51 +342,265 @@
   <section class="section section-dark">
     <div class="container">
 
-
+      <a href="../index.html#clase2"
+        style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+        ← Volver a Clase 2
+      </a>
 
       <div class="class-header">
         <h1 class="section-title">MINI PRÁCTICA GUIADA</h1>
-        <p class="class-subtitle">Construyendo tu primer mini live set</p>
+        <p class="class-subtitle">Construyendo tu primer mini live set funcional</p>
       </div>
 
-      <div class="intro-grid">
+      <!-- Requirements Overview -->
+      <div class="intro-grid" style="margin-bottom: 3rem;">
+        <div class="intro-card">
+          <h3><i class="fas fa-layer-group"></i> 2 Capas</h3>
+          <p>Layer A y Layer B con control independiente de opacidad y blend modes para mezclar visuales.</p>
+        </div>
 
         <div class="intro-card">
-          <h3>Qué harás</h3>
-          <p>
-            Integrarás todo lo aprendido en un mini set: lanzar clips, aplicar efectos, usar macros y manejar capas.
-            El objetivo es tener un pequeño live set funcional listo para improvisar y experimentar.
+          <h3><i class="fas fa-film"></i> 6 Clips</h3>
+          <p>3 clips por capa con diferentes texturas: abstractos, geométricos, y elementos visuales variados.</p>
+        </div>
+
+        <div class="intro-card">
+          <h3><i class="fas fa-magic"></i> 7 Efectos</h3>
+          <p>Hue Rotate, Brightness, Contrast, Saturation, Blur, Invert y Sepia aplicables en tiempo real.
           </p>
         </div>
 
         <div class="intro-card">
-          <h3>Contenido de la práctica</h3>
-          <ul class="topic-list">
-            <li><i class="fas fa-check"></i> 2 capas</li>
-            <li><i class="fas fa-check"></i> 6–10 clips</li>
-            <li><i class="fas fa-check"></i> 3 efectos activos</li>
-            <li><i class="fas fa-check"></i> 1 macro configurada</li>
-          </ul>
+          <h3><i class="fas fa-bolt"></i> 2 Macros</h3>
+          <p>Strobe Flash y Color Shift - Automatizaciones que controlan múltiples parámetros simultáneamente.</p>
         </div>
-
       </div>
 
+      <!-- Live Set Simulator -->
+      <div class="live-set-container">
+        <h3 style="color: var(--accent-primary); margin-bottom: 2rem; text-align: center;">
+          <i class="fas fa-play-circle"></i> MINI LIVE SET SIMULATOR
+          <span style="font-size: 0.7rem; opacity: 0.5; margin-left: 1rem;">RESOLUME STYLE</span>
+        </h3>
+
+        <!-- Top Section: Monitor + Effects -->
+        <div class="top-section">
+          <!-- Left Column: Monitor + Layers -->
+          <div class="left-column">
+            <!-- Output Monitor -->
+            <div class="output-monitor">
+              <canvas id="outputCanvas"></canvas>
+            </div>
+
+            <!-- Layers Container -->
+            <div class="layers-container">
+              <!-- Layer A -->
+              <div class="layer-section">
+                <!-- Left: Opacity Control -->
+                <div class="layer-controls">
+                  <div class="layer-opacity">
+                    <span>OPACITY</span>
+                    <input type="range" class="effect-slider" id="layerA-opacity" min="0" max="100" value="100">
+                    <span class="layer-opacity-val" id="layerA-opacity-val">100%</span>
+                  </div>
+                </div>
+
+                <!-- Right: Clips + Blend Modes -->
+                <div class="layer-content">
+                  <div class="clips-grid" id="layerA-clips"></div>
+                  <div class="blend-mode-selector">
+                    <button class="blend-btn active" data-layer="A" data-mode="normal">NORMAL</button>
+                    <button class="blend-btn" data-layer="A" data-mode="screen">SCREEN</button>
+                    <button class="blend-btn" data-layer="A" data-mode="multiply">MULTIPLY</button>
+                    <button class="blend-btn" data-layer="A" data-mode="overlay">OVERLAY</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Layer B -->
+              <div class="layer-section">
+                <!-- Left: Opacity Control -->
+                <div class="layer-controls">
+                  <div class="layer-opacity">
+                    <span>OPACITY</span>
+                    <input type="range" class="effect-slider" id="layerB-opacity" min="0" max="100" value="100">
+                    <span class="layer-opacity-val" id="layerB-opacity-val">100%</span>
+                  </div>
+                </div>
+
+                <!-- Right: Clips + Blend Modes -->
+                <div class="layer-content">
+                  <div class="clips-grid" id="layerB-clips"></div>
+                  <div class="blend-mode-selector">
+                    <button class="blend-btn active" data-layer="B" data-mode="normal">NORMAL</button>
+                    <button class="blend-btn" data-layer="B" data-mode="screen">SCREEN</button>
+                    <button class="blend-btn" data-layer="B" data-mode="multiply">MULTIPLY</button>
+                    <button class="blend-btn" data-layer="B" data-mode="overlay">OVERLAY</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Effects Panel -->
+          <div style="display: flex; flex-direction: column;">
+            <!-- Effects Panel -->
+            <div class="effects-panel">
+              <h4 style="color: var(--accent-primary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                <i class="fas fa-sliders-h"></i> COMPOSITION EFFECTS
+              </h4>
+
+              <div class="effect-control">
+                <div class="effect-label">
+                  <span>HUE ROTATE</span>
+                  <span id="hue-val">0°</span>
+                </div>
+                <input type="range" class="effect-slider" id="effect-hue" min="0" max="360" value="0">
+              </div>
+
+              <div class="effect-control">
+                <div class="effect-label">
+                  <span>BRIGHTNESS</span>
+                  <span id="brightness-val">100%</span>
+                </div>
+                <input type="range" class="effect-slider" id="effect-brightness" min="50" max="150" value="100">
+              </div>
+
+              <div class="effect-control">
+                <div class="effect-label">
+                  <span>CONTRAST</span>
+                  <span id="contrast-val">100%</span>
+                </div>
+                <input type="range" class="effect-slider" id="effect-contrast" min="50" max="200" value="100">
+              </div>
+
+              <div class="effect-control">
+                <div class="effect-label">
+                  <span>SATURATION</span>
+                  <span id="saturation-val">100%</span>
+                </div>
+                <input type="range" class="effect-slider" id="effect-saturation" min="0" max="200" value="100">
+              </div>
+
+              <div class="effect-control">
+                <div class="effect-label">
+                  <span>BLUR</span>
+                  <span id="blur-val">0px</span>
+                </div>
+                <input type="range" class="effect-slider" id="effect-blur" min="0" max="20" value="0">
+              </div>
+
+              <div class="effect-control">
+                <div class="effect-label">
+                  <span>INVERT</span>
+                  <span id="invert-val">0%</span>
+                </div>
+                <input type="range" class="effect-slider" id="effect-invert" min="0" max="100" value="0">
+              </div>
+
+              <div class="effect-control">
+                <div class="effect-label">
+                  <span>SEPIA</span>
+                  <span id="sepia-val">0%</span>
+                </div>
+                <input type="range" class="effect-slider" id="effect-sepia" min="0" max="100" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Macros Section (below layers) -->
+        <div style="margin-top: 2rem;">
+          <h4 style="color: var(--accent-primary); margin-bottom: 1rem; font-size: 0.9rem; text-align: center;">
+            <i class="fas fa-bolt"></i> MACROS
+          </h4>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <!-- Macro 1: Strobe Flash -->
+            <div class="macro-panel">
+              <h4 style="color: var(--accent-primary); margin-bottom: 0.5rem; font-size: 0.85rem;">
+                <i class="fas fa-bolt"></i> STROBE FLASH
+              </h4>
+              <p style="font-size: 0.7rem; color: #888; margin-bottom: 0.75rem;">
+                Modula contraste y blur automáticamente
+              </p>
+              <button class="macro-btn" id="macro-strobe">
+                <i class="fas fa-play"></i> ACTIVATE
+              </button>
+            </div>
+
+            <!-- Macro 2: Color Shift -->
+            <div class="macro-panel">
+              <h4 style="color: var(--accent-primary); margin-bottom: 0.5rem; font-size: 0.85rem;">
+                <i class="fas fa-palette"></i> COLOR SHIFT
+              </h4>
+              <p style="font-size: 0.7rem; color: #888; margin-bottom: 0.75rem;">
+                Cicla hue y saturación continuamente
+              </p>
+              <button class="macro-btn" id="macro-colorshift">
+                <i class="fas fa-play"></i> ACTIVATE
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Panel -->
+        <div class="stats-panel">
+          <div class="stat-item">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Capas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="active-clips">0</div>
+            <div class="stat-label">Clips Activos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">7</div>
+            <div class="stat-label">Efectos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Macros</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions -->
       <div class="cta-section">
-        <h3>Resultado esperado</h3>
-        <p>Un mini live set funcional que puedas reproducir, mezclar y experimentar libremente.</p>
-        <br>
+        <h3><i class="fas fa-graduation-cap"></i> Cómo usar este simulador</h3>
+        <div class="intro-grid" style="margin-top: 2rem;">
+          <div class="intro-card">
+            <h4>1. Lanza Clips</h4>
+            <p>Haz clic en los thumbnails para activar/desactivar clips en cada capa. Puedes tener múltiples clips
+              activos.</p>
+          </div>
+          <div class="intro-card">
+            <h4>2. Mezcla Capas</h4>
+            <p>Ajusta la opacidad de cada capa y experimenta con los blend modes para crear composiciones únicas.</p>
+          </div>
+          <div class="intro-card">
+            <h4>3. Aplica Efectos</h4>
+            <p>Usa los sliders de efectos para modificar la composición final en tiempo real.</p>
+          </div>
+          <div class="intro-card">
+            <h4>4. Activa el Macro</h4>
+            <p>Presiona el botón de macro para activar el efecto estroboscópico automático.</p>
+          </div>
+        </div>
       </div>
 
     </div>
   </section>
+
   <div class="topic-nav">
     <a href="efectos.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
-    <a href="../index.html#clase3" class="next">Ir a clase 3 </a>
+    <a href="../index.html#clase3" class="next">Ir a clase 3 <i class="fas fa-arrow-right"></i></a>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
   <script>
+    // Vanta Background
     let vantaEffect = VANTA.FOG({
       el: "#bg",
       mouseControls: true,
@@ -79,6 +618,299 @@
       const s = window.scrollY * 0.002;
       vantaEffect.setOptions({ zoom: 1.0 + s, speed: 0.2 + s });
     });
+
+    // ========== MINI LIVE SET LOGIC ==========
+
+    const canvas = document.getElementById('outputCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size
+    canvas.width = 1920;
+    canvas.height = 1080;
+
+    // Clip sources (6 clips total: 3 per layer - using all available loops)
+    const clipSources = {
+      A: [
+        '../media/loops/layer1_1.mp4',
+        '../media/loops/layer1_2.mp4',
+        '../media/loops/layer2_1.mp4'
+      ],
+      B: [
+        '../media/loops/layer2_2.mp4',
+        '../media/loops/layer3_1.mp4',
+        '../media/loops/layer3_2.mp4'
+      ]
+    };
+
+    // State
+    const state = {
+      layers: {
+        A: {
+          activeClips: [],
+          opacity: 1,
+          blendMode: 'normal',
+          videos: []
+        },
+        B: {
+          activeClips: [],
+          opacity: 1,
+          blendMode: 'normal',
+          videos: []
+        }
+      },
+      effects: {
+        hue: 0,
+        brightness: 100,
+        contrast: 100,
+        saturation: 100,
+        blur: 0,
+        invert: 0,
+        sepia: 0
+      },
+      macro: {
+        active: false,
+        interval: null
+      }
+    };
+
+    // Initialize clips UI
+    function initClips() {
+      ['A', 'B'].forEach(layer => {
+        const container = document.getElementById(`layer${layer}-clips`);
+        clipSources[layer].forEach((src, index) => {
+          const btn = document.createElement('div');
+          btn.className = 'clip-btn';
+          btn.dataset.layer = layer;
+          btn.dataset.index = index;
+
+          const video = document.createElement('video');
+          video.src = src;
+          video.loop = true;
+          video.muted = true;
+          video.playsInline = true;
+
+          btn.appendChild(video);
+          container.appendChild(btn);
+
+          // Store video reference
+          state.layers[layer].videos.push(video);
+
+          // Click handler
+          btn.addEventListener('click', () => {
+            const isActive = btn.classList.contains('active');
+            if (isActive) {
+              btn.classList.remove('active');
+              video.pause();
+              const clipIndex = state.layers[layer].activeClips.indexOf(index);
+              if (clipIndex > -1) {
+                state.layers[layer].activeClips.splice(clipIndex, 1);
+              }
+            } else {
+              btn.classList.add('active');
+              // Only play if video is ready
+              if (video.readyState >= 2) {
+                video.play().catch(err => console.log('Play failed:', err));
+              } else {
+                // Wait for video to be ready
+                video.addEventListener('canplay', () => {
+                  video.play().catch(err => console.log('Play failed:', err));
+                }, { once: true });
+              }
+              state.layers[layer].activeClips.push(index);
+            }
+            updateStats();
+          });
+        });
+      });
+    }
+
+    // Layer opacity controls
+    ['A', 'B'].forEach(layer => {
+      const slider = document.getElementById(`layer${layer}-opacity`);
+      const label = document.getElementById(`layer${layer}-opacity-val`);
+      slider.addEventListener('input', () => {
+        state.layers[layer].opacity = slider.value / 100;
+        label.textContent = `${slider.value}%`;
+      });
+    });
+
+    // Blend mode controls
+    document.querySelectorAll('.blend-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const layer = btn.dataset.layer;
+        const mode = btn.dataset.mode;
+
+        // Update active state
+        document.querySelectorAll(`.blend-btn[data-layer="${layer}"]`).forEach(b => {
+          b.classList.remove('active');
+        });
+        btn.classList.add('active');
+
+        // Update state
+        state.layers[layer].blendMode = mode;
+      });
+    });
+
+    // Effect controls
+    const effectControls = {
+      hue: { slider: document.getElementById('effect-hue'), label: document.getElementById('hue-val'), suffix: '°' },
+      brightness: { slider: document.getElementById('effect-brightness'), label: document.getElementById('brightness-val'), suffix: '%' },
+      contrast: { slider: document.getElementById('effect-contrast'), label: document.getElementById('contrast-val'), suffix: '%' },
+      saturation: { slider: document.getElementById('effect-saturation'), label: document.getElementById('saturation-val'), suffix: '%' },
+      blur: { slider: document.getElementById('effect-blur'), label: document.getElementById('blur-val'), suffix: 'px' },
+      invert: { slider: document.getElementById('effect-invert'), label: document.getElementById('invert-val'), suffix: '%' },
+      sepia: { slider: document.getElementById('effect-sepia'), label: document.getElementById('sepia-val'), suffix: '%' }
+    };
+
+    Object.entries(effectControls).forEach(([key, control]) => {
+      control.slider.addEventListener('input', () => {
+        state.effects[key] = parseFloat(control.slider.value);
+        control.label.textContent = `${control.slider.value}${control.suffix}`;
+      });
+    });
+
+    // Macro: Strobe Flash
+    const macroBtn = document.getElementById('macro-strobe');
+    macroBtn.addEventListener('click', () => {
+      if (state.macro.active) {
+        // Deactivate
+        state.macro.active = false;
+        macroBtn.classList.remove('active');
+        macroBtn.innerHTML = '<i class="fas fa-play"></i> ACTIVATE STROBE';
+        clearInterval(state.macro.interval);
+
+        // Reset effects
+        effectControls.contrast.slider.value = 100;
+        effectControls.blur.slider.value = 0;
+        state.effects.contrast = 100;
+        state.effects.blur = 0;
+        effectControls.contrast.label.textContent = '100%';
+        effectControls.blur.label.textContent = '0px';
+      } else {
+        // Activate
+        state.macro.active = true;
+        macroBtn.classList.add('active');
+        macroBtn.innerHTML = '<i class="fas fa-stop"></i> DEACTIVATE STROBE';
+
+        let toggle = false;
+        state.macro.interval = setInterval(() => {
+          toggle = !toggle;
+          const contrast = toggle ? 200 : 50;
+          const blur = toggle ? 10 : 0;
+
+          effectControls.contrast.slider.value = contrast;
+          effectControls.blur.slider.value = blur;
+          state.effects.contrast = contrast;
+          state.effects.blur = blur;
+          effectControls.contrast.label.textContent = `${contrast}%`;
+          effectControls.blur.label.textContent = `${blur}px`;
+        }, 200);
+      }
+    });
+
+    // Macro 2: Color Shift
+    const colorShiftBtn = document.getElementById('macro-colorshift');
+    let colorShiftInterval = null;
+    let colorShiftActive = false;
+
+    colorShiftBtn.addEventListener('click', () => {
+      if (colorShiftActive) {
+        // Deactivate
+        colorShiftActive = false;
+        colorShiftBtn.classList.remove('active');
+        colorShiftBtn.innerHTML = '<i class="fas fa-play"></i> ACTIVATE';
+        clearInterval(colorShiftInterval);
+
+        // Reset effects
+        effectControls.hue.slider.value = 0;
+        effectControls.saturation.slider.value = 100;
+        state.effects.hue = 0;
+        state.effects.saturation = 100;
+        effectControls.hue.label.textContent = '0°';
+        effectControls.saturation.label.textContent = '100%';
+      } else {
+        // Activate
+        colorShiftActive = true;
+        colorShiftBtn.classList.add('active');
+        colorShiftBtn.innerHTML = '<i class="fas fa-stop"></i> DEACTIVATE';
+
+        let hue = 0;
+        let satDirection = 1;
+        let sat = 100;
+
+        colorShiftInterval = setInterval(() => {
+          // Cycle hue 0-360
+          hue = (hue + 5) % 360;
+
+          // Oscillate saturation 50-150
+          sat += satDirection * 10;
+          if (sat >= 150 || sat <= 50) {
+            satDirection *= -1;
+          }
+
+          effectControls.hue.slider.value = hue;
+          effectControls.saturation.slider.value = sat;
+          state.effects.hue = hue;
+          state.effects.saturation = sat;
+          effectControls.hue.label.textContent = `${hue}°`;
+          effectControls.saturation.label.textContent = `${sat}%`;
+        }, 100);
+      }
+    });
+
+    // Update stats
+    function updateStats() {
+      const total = state.layers.A.activeClips.length + state.layers.B.activeClips.length;
+      document.getElementById('active-clips').textContent = total;
+    }
+
+    // Render loop
+    function render() {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Render layers
+      ['A', 'B'].forEach(layer => {
+        const layerState = state.layers[layer];
+        if (layerState.activeClips.length === 0) return;
+
+        // Set blend mode and opacity
+        ctx.globalCompositeOperation = layerState.blendMode;
+        ctx.globalAlpha = layerState.opacity;
+
+        // Draw active clips (blend them together)
+        layerState.activeClips.forEach(clipIndex => {
+          const video = layerState.videos[clipIndex];
+          if (video.readyState >= 2) {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          }
+        });
+      });
+
+      // Reset composite operation
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+
+      // Apply effects via CSS filter (all 7 effects)
+      const filters = [
+        `hue-rotate(${state.effects.hue}deg)`,
+        `brightness(${state.effects.brightness}%)`,
+        `contrast(${state.effects.contrast}%)`,
+        `saturate(${state.effects.saturation}%)`,
+        `blur(${state.effects.blur}px)`,
+        `invert(${state.effects.invert}%)`,
+        `sepia(${state.effects.sepia}%)`
+      ];
+      canvas.style.filter = filters.join(' ');
+
+      requestAnimationFrame(render);
+    }
+
+    // Initialize
+    initClips();
+    render();
   </script>
 </body>
 
