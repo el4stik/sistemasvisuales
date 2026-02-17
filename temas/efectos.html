@@ -103,6 +103,41 @@
     .simulator-card:hover .output-preview {
       box-shadow: 0 0 30px rgba(37, 212, 169, 0.15);
     }
+
+    /* Source Buttons */
+    .source-btn {
+      width: 30px;
+      height: 30px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+
+    .source-btn:hover {
+      background: rgba(37, 212, 169, 0.3);
+      border-color: var(--accent-primary);
+    }
+
+    .source-btn.active {
+      background: var(--accent-primary);
+      color: black;
+      border-color: var(--accent-primary);
+    }
+
+    /* Card Borders like Intro */
+    .intro-card {
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      transition: all 0.3s;
+    }
+
+    .intro-card:hover {
+      border-color: rgba(37, 212, 169, 0.3) !important;
+      background: rgba(37, 212, 169, 0.02) !important;
+    }
   </style>
 </head>
 
@@ -132,13 +167,20 @@
           <!-- Monitor Area -->
           <div class="monitor-section">
             <div class="monitor-label active">Post-FX Output</div>
-            <div class="output-preview" style="border-color: var(--accent-primary);">
+            <div class="output-preview" style="border-color: var(--accent-primary); position: relative;">
               <video id="fxVideo" src="../media/loops/layer1_1.mp4" loop muted autoplay playsinline
                 webkit-playsinline></video>
+
+              <!-- Video Switcher Overlay -->
+              <div style="position: absolute; bottom: 10px; left: 10px; display: flex; gap: 5px; z-index: 10;">
+                <button class="source-btn active" data-src="../media/loops/layer1_1.mp4" title="Abstracto">1</button>
+                <button class="source-btn" data-src="../media/loops/layer2_1.mp4" title="Geométrico">2</button>
+                <button class="source-btn" data-src="../media/loops/layer3_1.mp4" title="Real/Texto">3</button>
+              </div>
             </div>
             <div class="hint-text" style="text-align: left;">
-              <i class="fas fa-info-circle"></i> Los efectos de Resolume se pueden aplicar a clips individuales, capas
-              enteras o a la composición final.
+              <i class="fas fa-info-circle"></i> Prueba el procesador con distintas texturas para ver cómo reaccionan
+              los efectos.
             </div>
           </div>
 
@@ -209,29 +251,79 @@
         </div>
       </div>
 
-      <div class="intro-grid">
-        <div class="intro-card">
-          <h3>Qué aprenderás</h3>
-          <p>
-            Aplicarás efectos a clips, capas y composiciones, ajustarás parámetros principales, usarás sliders y macros,
-            y activarás autopilot para darle movimiento a tus visuales.
-          </p>
+      <!-- Jerarquía de Efectos Section -->
+      <div style="margin: 4rem 0;">
+        <h2
+          style="color: var(--accent-primary); margin-bottom: 2rem; border-left: 4px solid var(--accent-primary); padding-left: 1rem;">
+          JERARQUÍA DE EFECTOS
+        </h2>
+        <div class="intro-grid">
+          <div class="intro-card" style="border: 1px solid rgba(255,255,255,0.1); padding: 2rem;">
+            <div style="font-size: 2rem; color: var(--accent-secondary); margin-bottom: 1rem;"><i
+                class="fas fa-film"></i></div>
+            <h4 style="color: white; margin-bottom: 1rem;">Efecto de CLIP</h4>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Solo afecta al video seleccionado. Ideal para corregir color o
+              transformar un loop específico sin alterar el resto.</p>
+          </div>
+          <div class="intro-card" style="border: 1px solid rgba(255,255,255,0.1); padding: 2rem;">
+            <div style="font-size: 2rem; color: var(--accent-primary); margin-bottom: 1rem;"><i
+                class="fas fa-layer-group"></i></div>
+            <h4 style="color: white; margin-bottom: 1rem;">Efecto de CAPA</h4>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Afecta a todos los videos de esa fila. Útil para aplicar un
+              estilo visual coherente a todo un canal de mezcla.</p>
+          </div>
+          <div class="intro-card" style="border: 1px solid rgba(255,255,255,0.1); padding: 2rem;">
+            <div style="font-size: 2rem; color: #ff4444; margin-bottom: 1rem;"><i class="fas fa-desktop"></i></div>
+            <h4 style="color: white; margin-bottom: 1rem;">Efecto de COMP</h4>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Es el paso final. Afecta a la mezcla total. Perfecto para
+              efectos globales como "Black & White" o "Bloom".</p>
+          </div>
         </div>
+      </div>
 
-        <div class="intro-card">
-          <h3>Temas principales</h3>
-          <ul class="topic-list">
-            <li><i class="fas fa-check"></i> Efectos por nivel (Clip, Layer, Comp)</li>
-            <li><i class="fas fa-check"></i> Modulación de parámetros</li>
-            <li><i class="fas fa-check"></i> Sliders y Macros de control</li>
-            <li><i class="fas fa-check"></i> Efectos "destructivos" y estéticos</li>
-          </ul>
+      <!-- Efectos Esenciales Grid -->
+      <div style="margin: 4rem 0;">
+        <h2
+          style="color: var(--accent-primary); margin-bottom: 2rem; border-left: 4px solid var(--accent-primary); padding-left: 1rem;">
+          EFECTOS "MUST-HAVE" EN RESOLUME
+        </h2>
+        <div class="intro-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="intro-card" style="text-align: center; background: rgba(255,255,255,0.02);">
+            <i class="fas fa-columns"
+              style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent-secondary);"></i>
+            <h5>Mirror</h5>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Crea simetría instantánea. El mejor amigo del VJ.</p>
+          </div>
+          <div class="intro-card" style="text-align: center; background: rgba(255,255,255,0.02);">
+            <i class="fas fa-wave-square"
+              style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent-secondary);"></i>
+            <h5>RGB Shift</h5>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Separa los canales de color. Look analógico/glitch.</p>
+          </div>
+          <div class="intro-card" style="text-align: center; background: rgba(255,255,255,0.02);">
+            <i class="fas fa-adjust"
+              style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent-secondary);"></i>
+            <h5>Invert</h5>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Cambia los colores a su opuesto. Impacto rítmico.</p>
+          </div>
+          <div class="intro-card" style="text-align: center; background: rgba(255,255,255,0.02);">
+            <i class="fas fa-sun" style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent-secondary);"></i>
+            <h5>Bloom</h5>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Hace que las luces brillen más. Look "dreamy".</p>
+          </div>
+          <div class="intro-card" style="text-align: center; background: rgba(255,255,255,0.02);">
+            <i class="fas fa-th-large"
+              style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent-secondary);"></i>
+            <h5>Tile</h5>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Multiplica la imagen en una cuadrícula.</p>
+          </div>
         </div>
       </div>
 
       <div class="cta-section">
-        <h3>Objetivo de esta sección</h3>
-        <p>Controlar y modular la imagen para lograr visuales dinámicos en tus performances.</p>
+        <h3>¿Cómo aplicar efectos?</h3>
+        <p>Simplemente arrastra un efecto desde el panel "Effects" de Resolume hacia un Clip, Layer o la Composition.
+        </p>
         <br>
       </div>
 
@@ -326,6 +418,22 @@
       isInverted = !isInverted;
       video.style.filter += isInverted ? ' invert(1)' : '';
       if (!isInverted) updateFilters(); // Restore base filters
+    });
+
+    // Video Source Switcher Logic
+    const sourceBtns = document.querySelectorAll('.source-btn');
+    sourceBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newSrc = btn.dataset.src;
+        video.src = newSrc;
+        video.play();
+
+        sourceBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Re-apply filters after source change
+        setTimeout(updateFilters, 50);
+      });
     });
 
     // Keyboard shortcut for Bypass

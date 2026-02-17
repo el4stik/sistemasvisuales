@@ -109,9 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Store as last active for Resume functionality
                     lastActiveClip = clip;
 
-                    // If src is different or we are restarting, reload
                     outLayer.src = video.getAttribute('src');
                     outLayer.style.display = 'block';
+
+                    // Sync playback speed with current BPM (120 = 1.0x)
+                    outLayer.playbackRate = bpm / 120;
+
                     outLayer.play().catch(e => console.log("Navegador bloqueó video, esperando interacción."));
 
                     checkSignal();
@@ -161,6 +164,13 @@ document.addEventListener('DOMContentLoaded', () => {
             bpmIndicator.classList.add('beat');
             setTimeout(() => bpmIndicator.classList.remove('beat'), 100);
         }, ms);
+
+        // Update active videos playback speed
+        outLayers.forEach(video => {
+            if (video.style.display === 'block') {
+                video.playbackRate = bpm / 120;
+            }
+        });
     }
 
     resetBpmInterval();
