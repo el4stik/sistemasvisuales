@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentación - Clase 1</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const images = document.querySelectorAll('.card-images img');
+
+  images.forEach(img => {
+    img.addEventListener('click', () => {
+      const modal = document.createElement('div');
+      modal.className = 'lightbox';
+      modal.innerHTML = `<img src="${img.src}">`;
+      document.body.appendChild(modal);
+
+      modal.addEventListener('click', () => modal.remove());
+    });
+  });
+
+});
+</script>
+
+
+<body>
+
+<section class="section section-dark">
+  <div class="container">
+
+    <a href="../index.html#clase1" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+      ← Volver a Clase 1
+    </a>
+
+    <div class="class-header">
+      <h1 class="section-title">PRESENTACIÓN</h1>
+      <p class="class-subtitle">Quiénes somos · Qué es el taller · Cómo vamos a trabajar</p>
+    </div>
+
+    <div class="intro-grid">
+
+      <div class="intro-card">
+        <h3>¿Qué es este taller?</h3>
+        <p>
+          Este es un taller práctico de introducción al VJing y a la performance visual en tiempo real,
+          enfocado en el uso de Resolume Arena como herramienta principal.
+        </p>
+        <p>
+          Aprenderás no solo a usar el software, sino a pensar visualmente, estructurar un live set
+          y desarrollar tu propio lenguaje audiovisual.
+        </p>
+      </div>
+        <div class="intro-card">
+          <div class="card-images">
+            <img src="../media/presentacion/que_es_01.png" alt="">
+            <img src="../media/presentacion/que_es_02.png" alt="">
+            <img src="../media/presentacion/que_es_03.png" alt="">
+          </div>
+        </div>
+
+        
+      <div class="intro-card">
+        <h3>¿Quiénes somos?</h3>
+        <p>
+          Instituto Brutal Visual es un colectivo audiovisual enfocado en performance, experimentación,
+          visuales en vivo, instalaciones y cruces entre tecnología, arte y música.
+        </p>
+        <p>
+          Nuestro enfoque combina lo digital, lo analógico y lo experimental.
+        </p>
+      </div>
+
+      </div>
+        <div class="intro-card">
+          <div class="card-images">
+            <img src="../media/presentacion/ibv_01.png" alt="">
+            <img src="../media/presentacion/ibv_02.png" alt="">
+            <img src="../media/presentacion/ibv_04.png" alt="">
+          </div>
+        </div>
+
+       
+      <div class="intro-card">
+        <h3>Metodología del Taller</h3>
+        <ul class="topic-list">
+          <li><i class="fas fa-check"></i> Aprendizaje práctico</li>
+          <li><i class="fas fa-check"></i> Ejercicios guiados</li>
+          <li><i class="fas fa-check"></i> Exploración libre</li>
+          <li><i class="fas fa-check"></i> Feedback grupal</li>
+          <li><i class="fas fa-check"></i> Construcción de un live set propio</li>
+        </ul>
+      </div>
+
+      <div class="intro-card">
+        <h3>Objetivo de esta sección</h3>
+        <p>
+          Entender el enfoque del taller, conocer el contexto del VJing y alinear expectativas
+          para aprovechar al máximo las siguientes clases.
+        </p>
+      </div>
+
+    <div class="cta-section">
+      <h3>Comenzamos con la Imagen en Tiempo Real 🎥</h3>
+      <p>Vamos al siguiente módulo</p>
+      <br>
+    </div>
+
+  </div>
+</section>
+
+<div class="topic-nav">
+  <span></span>
+  <a href="imagen-tiempo-real.html" class="next">
+    Siguiente <i class="fas fa-arrow-right"></i>
+  </a>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const prevBtn = document.querySelector('.lightbox-arrow.prev');
+  const nextBtn = document.querySelector('.lightbox-arrow.next');
+  document.querySelector('.lightbox-content')
+  .addEventListener('click', e => e.stopPropagation());
+
+
+  let currentImages = [];
+  let currentIndex = 0;
+
+  function openLightbox(images, index) {
+    currentImages = images;
+    currentIndex = index;
+    lightboxImg.src = currentImages[currentIndex].src;
+    lightbox.classList.add('active');
+  }
+
+  function showNext() {
+    currentIndex = (currentIndex + 1) % currentImages.length;
+    lightboxImg.src = currentImages[currentIndex].src;
+  }
+
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+    lightboxImg.src = currentImages[currentIndex].src;
+  }
+
+  // Click en imágenes
+  document.querySelectorAll('.card-images').forEach(group => {
+    const imgs = Array.from(group.querySelectorAll('img'));
+
+    imgs.forEach((img, index) => {
+      img.addEventListener('click', () => {
+        openLightbox(imgs, index);
+      });
+    });
+  });
+
+  nextBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showNext();
+  });
+
+  prevBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showPrev();
+  });
+
+  lightbox.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'ArrowRight') showNext();
+    if (e.key === 'ArrowLeft') showPrev();
+    if (e.key === 'Escape') lightbox.classList.remove('active');
+  });
+});
+</script>
+<div id="lightbox" class="lightbox">
+  <button class="lightbox-arrow prev">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+
+  <div class="lightbox-content">
+    <img id="lightbox-img">
+  </div>
+
+  <button class="lightbox-arrow next">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+</div>
+
+</body>
+</html>

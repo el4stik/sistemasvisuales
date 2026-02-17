@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imagen en Tiempo Real - Clase 1</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<section class="section section-dark">
+  <div class="container">
+
+    <a href="../index.html#clase1" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+      ← Volver a Clase 1
+    </a>
+
+    <div class="class-header">
+      <h1 class="section-title">IMAGEN EN TIEMPO REAL</h1>
+      <p class="class-subtitle">Performance visual · Improvisación · Lenguaje audiovisual vivo</p>
+    </div>
+
+    <div class="intro-grid">
+
+      <div class="intro-card">
+        <h3>¿Qué es imagen en tiempo real?</h3>
+        <p>
+          La imagen en tiempo real es aquella que se genera, manipula o mezcla en el mismo momento
+          en que es visualizada. No es un video pre-renderizado, sino una imagen viva,
+          reactiva y en constante transformación.
+        </p>
+        <p>
+          En el VJing, la imagen se construye en vivo, respondiendo a la música, al espacio,
+          al público y al estado emocional del performer.
+        </p>
+      </div>
+       <div class="intro-card">
+          <div class="card-images">
+            <img src="../media/tiempo/tiempo_real_01.png" alt="">
+            <img src="../media/tiempo/tiempo_real_02.png" alt="">
+            <img src="../media/tiempo/tiempo_real_03.png" alt="">
+          </div>
+        </div>
+
+       
+      <div class="intro-card">
+        <h3>Diferencia con el video tradicional</h3>
+        <ul class="topic-list">
+          <li><i class="fas fa-check"></i> Video tradicional → lineal, cerrado, exportado</li>
+          <li><i class="fas fa-check"></i> Imagen en tiempo real → abierta, modular, reactiva</li>
+          <li><i class="fas fa-check"></i> No hay montaje final: el montaje ocurre en vivo</li>
+          <li><i class="fas fa-check"></i> Cada ejecución es única e irrepetible</li>
+        </ul>
+      </div>
+       <div class="intro-card">
+          <div class="card-images">
+
+            <img src="../media/tiempo/tiempo_real_04.png" alt="">
+            <img src="../media/tiempo/tiempo_real_05.png" alt="">
+            <img src="../media/tiempo/tiempo_real_06.png" alt="">
+
+          </div>
+        </div>
+
+
+        
+      <div class="intro-card">
+        <h3>Performance visual</h3>
+        <p>
+          El VJ no “pone videos”, interpreta visualmente la música.
+          Así como un músico improvisa con sonidos, el VJ improvisa con imágenes.
+        </p>
+        <p>
+          La performance visual es un diálogo entre:
+        </p>
+        <ul class="topic-list">
+          <li><i class="fas fa-check"></i> Ritmo</li>
+          <li><i class="fas fa-check"></i> Color</li>
+          <li><i class="fas fa-check"></i> Movimiento</li>
+          <li><i class="fas fa-check"></i> Espacio</li>
+          <li><i class="fas fa-check"></i> Energía del público</li>
+        </ul>
+      </div>
+       <div class="intro-card">
+          <div class="card-images">
+            <img src="../media/tiempo/tiempo_real_07.png" alt="">
+            <img src="../media/tiempo/tiempo_real_08.png" alt="">
+            <img src="../media/tiempo/tiempo_real_09.png" alt="">
+          </div>
+        </div>
+
+       
+      <div class="intro-card">
+        <h3>Improvisación visual</h3>
+        <p>
+          Improvisar visualmente es tomar decisiones en tiempo real.
+          No existe un guion fijo, sino una estructura flexible que permite reaccionar
+          a lo que sucede en el entorno.
+        </p>
+        <p>
+          Esto requiere:
+        </p>
+        <ul class="topic-list">
+          <li><i class="fas fa-check"></i> Conocimiento del software</li>
+          <li><i class="fas fa-check"></i> Sensibilidad musical</li>
+          <li><i class="fas fa-check"></i> Capacidad de observación</li>
+          <li><i class="fas fa-check"></i> Intuición</li>
+        </ul>
+      </div>
+
+      <div class="intro-card">
+        <h3>Objetivo de este módulo</h3>
+        <p>
+          Comprender que el VJing no es solo técnica, sino una forma de expresión artística,
+          donde la imagen se convierte en un instrumento vivo.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="cta-section">
+      <h3>Vamos al origen del VJing 🌍</h3>
+      <p>Historia, referentes y escenas</p>
+      <br>
+    </div>
+
+  </div>
+</section>
+
+<div class="topic-nav">
+  <a href="presentacion.html" class="prev">
+    <i class="fas fa-arrow-left"></i> Anterior
+  </a>
+
+  <a href="referentes.html" class="next">
+    Siguiente <i class="fas fa-arrow-right"></i>
+  </a>
+</div>
+ <script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  let currentImages = [];
+  let currentIndex = 0;
+
+  function openLightbox(images, index) {
+    currentImages = images;
+    currentIndex = index;
+
+    const modal = document.createElement('div');
+    modal.className = 'lightbox active';
+    modal.innerHTML = `
+      <button class="lightbox-arrow prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <div class="lightbox-content">
+        <img src="${currentImages[currentIndex].src}">
+      </div>
+
+      <button class="lightbox-arrow next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    `;
+
+    document.body.appendChild(modal);
+
+    const imgEl = modal.querySelector('img');
+    const prevBtn = modal.querySelector('.prev');
+    const nextBtn = modal.querySelector('.next');
+
+    function updateImage() {
+      imgEl.src = currentImages[currentIndex].src;
+    }
+
+    nextBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      currentIndex = (currentIndex + 1) % currentImages.length;
+      updateImage();
+    });
+
+    prevBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+      updateImage();
+    });
+
+    modal.addEventListener('click', () => modal.remove());
+  }
+
+  document.querySelectorAll('.card-images').forEach(group => {
+    const imgs = Array.from(group.querySelectorAll('img'));
+
+    imgs.forEach((img, index) => {
+      img.addEventListener('click', () => {
+        openLightbox(imgs, index);
+      });
+    });
+  });
+
+});
+</script>
+
+
+</body>
+</html>

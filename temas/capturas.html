@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capturas - Clase 3</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="bg"></div>
+  <section class="section section-dark">
+    <div class="container">
+
+      <a href="../index.html" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+        ← Volver al Taller
+      </a>
+
+      <div class="class-header">
+        <h1 class="section-title">CAPTURAS DE PANTALLA Y VENTANAS</h1>
+        <p class="class-subtitle">Feedback, glitch y loops infinitos</p>
+      </div>
+
+      <div class="intro-grid">
+
+        <div class="intro-card">
+          <h3>Tipos de captura</h3>
+          <ul class="topic-list">
+            <li><i class="fas fa-check"></i> Pantalla completa</li>
+            <li><i class="fas fa-check"></i> Ventanas específicas</li>
+            <li><i class="fas fa-check"></i> Cámaras</li>
+          </ul>
+        </div>
+
+        <div class="intro-card">
+          <h3>Usos creativos</h3>
+          <ul class="topic-list">
+            <li><i class="fas fa-check"></i> Feedback visual</li>
+            <li><i class="fas fa-check"></i> Glitch</li>
+            <li><i class="fas fa-check"></i> Loops infinitos</li>
+            <li><i class="fas fa-check"></i> Delay visual</li>
+          </ul>
+          <div class="topic-goal experimental">
+            <i class="fas fa-flask"></i>
+            <strong>Aquí brillas con tu lado experimental 😈</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="cta-section">
+        <h3>Objetivo</h3>
+        <p>Aprender a capturar cualquier fuente y usarla creativamente dentro de tu performance.</p>
+        <br>
+
+      </div>
+
+    </div>
+  </section>
+  <div class="topic-nav">
+    <a href="repaso.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
+    <a href="camara.html" class="next">Siguiente <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+  <script>
+    let vantaEffect = VANTA.FOG({
+      el: "#bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      highlightColor: 0x1d3a33,
+      midtoneColor: 0x0a1a14,
+      lowlightColor: 0x020b08,
+      baseColor: 0x010504,
+      blurFactor: 0.5,
+      speed: 0.2,
+      zoom: 1.0
+    });
+    window.addEventListener("scroll", () => {
+      const s = window.scrollY * 0.002;
+      vantaEffect.setOptions({ zoom: 1.0 + s, speed: 0.2 + s });
+    });
+  </script>
+</body>
+
+</html>

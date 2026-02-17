@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Set Híbrido - Clase 3</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="bg"></div>
+  <section class="section section-dark">
+    <div class="container">
+
+
+
+      <div class="class-header">
+        <h1 class="section-title">CONSTRUCCIÓN DE SET HÍBRIDO</h1>
+        <p class="class-subtitle">Integrando todos los elementos en tu performance</p>
+      </div>
+
+      <div class="intro-grid">
+
+        <div class="intro-card">
+          <h3>Integración completa</h3>
+          <ul class="topic-list">
+            <li><i class="fas fa-check"></i> Cámara + clips + efectos + capturas</li>
+            <li><i class="fas fa-check"></i> Cómo improvisar en tiempo real</li>
+            <li><i class="fas fa-check"></i> Tips de performance real</li>
+          </ul>
+        </div>
+
+        <div class="intro-card">
+          <h3>Tips prácticos</h3>
+          <ul class="topic-list">
+            <li><i class="fas fa-check"></i> Prepara tu flujo antes del show</li>
+            <li><i class="fas fa-check"></i> Mantén tu set flexible</li>
+            <li><i class="fas fa-check"></i> Experimenta sin miedo con efectos y capturas</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="cta-section">
+        <h3>Objetivo</h3>
+        <p>Que tengas la capacidad de montar un set híbrido completo, combinando cámaras, capturas y efectos para un
+          performance dinámico y creativo.</p>
+        <br>
+      </div>
+
+    </div>
+  </section>
+  <div class="topic-nav">
+    <a href="spout.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
+    <a href="../index.html" class="next">Volver al taller </a>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+  <script>
+    let vantaEffect = VANTA.FOG({
+      el: "#bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      highlightColor: 0x1d3a33,
+      midtoneColor: 0x0a1a14,
+      lowlightColor: 0x020b08,
+      baseColor: 0x010504,
+      blurFactor: 0.5,
+      speed: 0.2,
+      zoom: 1.0
+    });
+    window.addEventListener("scroll", () => {
+      const s = window.scrollY * 0.002;
+      vantaEffect.setOptions({ zoom: 1.0 + s, speed: 0.2 + s });
+    });
+  </script>
+</body>
+
+</html>

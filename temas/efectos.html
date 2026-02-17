@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Efectos - Taller Visuales</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Efectos de Hover para el Simulador */
+    .simulator-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(37, 212, 169, 0.1);
+    }
+
+    .simulator-card:hover {
+      border-color: rgba(37, 212, 169, 0.4);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 20px rgba(37, 212, 169, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .fx-slider-item {
+      padding: 0.5rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .fx-slider-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .fx-slider-item:hover span:first-child {
+      color: var(--accent-primary);
+    }
+
+    /* Estilos de los Sliders */
+    .opacity-fader::-webkit-slider-thumb {
+      transition: all 0.2s;
+    }
+
+    .opacity-fader:hover::-webkit-slider-thumb {
+      background-color: var(--accent-primary) !important;
+      box-shadow: 0 0 10px var(--accent-primary);
+      transform: scale(1.2);
+    }
+
+    .opacity-fader {
+      background: var(--accent-primary) !important;
+      height: 2px !important;
+    }
+
+    .opacity-fader:hover {
+      background: var(--accent-primary) !important;
+      box-shadow: 0 0 10px rgba(37, 212, 169, 0.3);
+    }
+
+    /* Botones de Control */
+    #resetFx,
+    #invertFx {
+      transition: all 0.2s !important;
+    }
+
+    #resetFx:hover,
+    #invertFx:hover,
+    .power-btn:hover {
+      background: #444 !important;
+      color: var(--accent-primary) !important;
+      border-color: var(--accent-primary) !important;
+    }
+
+    /* Power Button Style (Resolume B) */
+    .power-btn {
+      width: 24px;
+      height: 24px;
+      background: #333;
+      border: 1px solid #444;
+      color: #666;
+      font-size: 0.7rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .power-btn.active {
+      background: var(--accent-primary);
+      color: #000;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 10px var(--accent-primary);
+    }
+
+    /* Glow de Monitor */
+    .output-preview {
+      transition: box-shadow 0.4s;
+    }
+
+    .simulator-card:hover .output-preview {
+      box-shadow: 0 0 30px rgba(37, 212, 169, 0.15);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="bg"></div>
+
+  <section class="section section-dark">
+    <div class="container">
+
+      <a href="../index.html#clase2"
+        style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+        ← Volver a Clase 2
+      </a>
+
+      <div class="class-header">
+        <h1 class="section-title">EFECTOS BÁSICOS Y CONTROL</h1>
+        <p class="class-subtitle">Controlando la imagen en tiempo real</p>
+      </div>
+
+      <!-- Effects Simulator -->
+      <div class="simulator-card">
+        <h3 style="color: var(--accent-primary); margin-bottom: 2rem;">
+          <i class="fas fa-magic"></i> EFFECTS PROCESSOR <span style="font-size: 0.8rem; opacity: 0.5;">v1.0</span>
+        </h3>
+
+        <div class="simulator-main-layout">
+          <!-- Monitor Area -->
+          <div class="monitor-section">
+            <div class="monitor-label active">Post-FX Output</div>
+            <div class="output-preview" style="border-color: var(--accent-primary);">
+              <video id="fxVideo" src="../media/loops/layer1_1.mp4" loop muted autoplay playsinline
+                webkit-playsinline></video>
+            </div>
+            <div class="hint-text" style="text-align: left;">
+              <i class="fas fa-info-circle"></i> Los efectos de Resolume se pueden aplicar a clips individuales, capas
+              enteras o a la composición final.
+            </div>
+          </div>
+
+          <!-- Controls Area -->
+          <div class="controls-section">
+            <div class="dashboard-panel"
+              style="background: #1a1a1a; padding: 1.5rem; border-radius: 4px; border: 1px solid #333;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div class="monitor-label" style="margin: 0;">Efectos de Composición</div>
+                <button id="powerBtn" class="power-btn active" title="Bypass (B)">B</button>
+              </div>
+
+              <div class="fx-control-group" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Opacity -->
+                <div class="fx-slider-item">
+                  <div
+                    style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 0.5rem;">
+                    <span>OPACIDAD</span>
+                    <span id="valOpacity">100%</span>
+                  </div>
+                  <input type="range" class="opacity-fader" id="fxOpacity" min="0" max="100" value="100"
+                    style="width: 100%; height: 4px; appearance: none; -webkit-appearance: none; background: #333; cursor: pointer;">
+                </div>
+
+                <!-- Grayscale -->
+                <div class="fx-slider-item">
+                  <div
+                    style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 0.5rem;">
+                    <span>DESATURAR (Grayscale)</span>
+                    <span id="valGray">0%</span>
+                  </div>
+                  <input type="range" class="opacity-fader" id="fxGray" min="0" max="100" value="0"
+                    style="width: 100%; height: 4px; appearance: none; -webkit-appearance: none; background: #333; cursor: pointer;">
+                </div>
+
+                <!-- Hue Rotate -->
+                <div class="fx-slider-item">
+                  <div
+                    style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 0.5rem;">
+                    <span>HUE ROTATE</span>
+                    <span id="valHue">0°</span>
+                  </div>
+                  <input type="range" class="opacity-fader" id="fxHue" min="0" max="360" value="0"
+                    style="width: 100%; height: 4px; appearance: none; -webkit-appearance: none; background: #333; cursor: pointer;">
+                </div>
+
+                <!-- Contrast / Brightness Macro -->
+                <div class="fx-slider-item">
+                  <div
+                    style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 0.5rem;">
+                    <span>MODO BRUTAL (Contrast)</span>
+                    <span id="valBrutal">100%</span>
+                  </div>
+                  <input type="range" class="opacity-fader" id="fxBrutal" min="100" max="300" value="100"
+                    style="width: 100%; height: 4px; appearance: none; -webkit-appearance: none; background: #333; cursor: pointer;">
+                </div>
+              </div>
+
+              <div style="margin-top: 2rem; display: flex; gap: 0.5rem;">
+                <button id="resetFx"
+                  style="flex: 1; padding: 0.5rem; background: #333; border: 1px solid #444; color: #888; font-size: 0.6rem; cursor: pointer;">BYPASS
+                  ALL</button>
+                <button id="invertFx"
+                  style="flex: 1; padding: 0.5rem; background: #333; border: 1px solid #444; color: #888; font-size: 0.6rem; cursor: pointer;">INVERTIR</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-grid">
+        <div class="intro-card">
+          <h3>Qué aprenderás</h3>
+          <p>
+            Aplicarás efectos a clips, capas y composiciones, ajustarás parámetros principales, usarás sliders y macros,
+            y activarás autopilot para darle movimiento a tus visuales.
+          </p>
+        </div>
+
+        <div class="intro-card">
+          <h3>Temas principales</h3>
+          <ul class="topic-list">
+            <li><i class="fas fa-check"></i> Efectos por nivel (Clip, Layer, Comp)</li>
+            <li><i class="fas fa-check"></i> Modulación de parámetros</li>
+            <li><i class="fas fa-check"></i> Sliders y Macros de control</li>
+            <li><i class="fas fa-check"></i> Efectos "destructivos" y estéticos</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h3>Objetivo de esta sección</h3>
+        <p>Controlar y modular la imagen para lograr visuales dinámicos en tus performances.</p>
+        <br>
+      </div>
+
+    </div>
+  </section>
+  <div class="topic-nav">
+    <a href="performance.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
+    <a href="practica.html" class="next">Siguiente <i class="fas fa-arrow-right"></i></a>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+  <script>
+    let vantaEffect = VANTA.FOG({
+      el: "#bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      highlightColor: 0x1d3a33,
+      midtoneColor: 0x0a1a14,
+      lowlightColor: 0x020b08,
+      baseColor: 0x010504,
+      blurFactor: 0.5,
+      speed: 0.2,
+      zoom: 1.0
+    });
+    window.addEventListener("scroll", () => {
+      const s = window.scrollY * 0.002;
+      vantaEffect.setOptions({ zoom: 1.0 + s, speed: 0.2 + s });
+    });
+
+    // Effects Logic
+    const video = document.getElementById('fxVideo');
+    const sliders = {
+      opacity: document.getElementById('fxOpacity'),
+      gray: document.getElementById('fxGray'),
+      hue: document.getElementById('fxHue'),
+      brutal: document.getElementById('fxBrutal')
+    };
+    const labels = {
+      opacity: document.getElementById('valOpacity'),
+      gray: document.getElementById('valGray'),
+      hue: document.getElementById('valHue'),
+      brutal: document.getElementById('valBrutal')
+    };
+
+    // Bypass Logic
+    const powerBtn = document.getElementById('powerBtn');
+    let isBypassed = false;
+
+    function updateFilters() {
+      if (isBypassed) {
+        video.style.opacity = 1;
+        video.style.filter = 'none';
+        return;
+      }
+
+      const opacity = sliders.opacity.value / 100;
+      const gray = sliders.gray.value;
+      const hue = sliders.hue.value;
+      const brutal = sliders.brutal.value;
+
+      video.style.opacity = opacity;
+      video.style.filter = `grayscale(${gray}%) hue-rotate(${hue}deg) contrast(${brutal}%)`;
+
+      labels.opacity.textContent = `${sliders.opacity.value}%`;
+      labels.gray.textContent = `${gray}%`;
+      labels.hue.textContent = `${hue}°`;
+      labels.brutal.textContent = `${brutal}%`;
+    }
+
+    powerBtn.addEventListener('click', () => {
+      isBypassed = !isBypassed;
+      powerBtn.classList.toggle('active', !isBypassed);
+      updateFilters();
+    });
+
+    Object.values(sliders).forEach(s => s.addEventListener('input', updateFilters));
+
+    document.getElementById('resetFx').addEventListener('click', () => {
+      sliders.opacity.value = 100;
+      sliders.gray.value = 0;
+      sliders.hue.value = 0;
+      sliders.brutal.value = 100;
+      video.classList.remove('inverted');
+      updateFilters();
+    });
+
+    let isInverted = false;
+    document.getElementById('invertFx').addEventListener('click', () => {
+      if (isBypassed) return;
+      isInverted = !isInverted;
+      video.style.filter += isInverted ? ' invert(1)' : '';
+      if (!isInverted) updateFilters(); // Restore base filters
+    });
+
+    // Keyboard shortcut for Bypass
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'b') {
+        powerBtn.click();
+      }
+    });
+
+  </script>
+</body>
+
+</html>
