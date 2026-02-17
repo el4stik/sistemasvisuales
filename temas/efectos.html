@@ -190,20 +190,29 @@
           <!-- Monitor Area -->
           <div class="monitor-section">
             <div class="monitor-label active">Post-FX Output</div>
-            <div class="output-preview" style="border-color: var(--accent-primary); position: relative;">
+            <div class="output-preview" style="border-color: var(--accent-primary); margin-bottom: 1.5rem;">
               <video id="fxVideo" src="../media/loops/layer1_1.mp4" loop muted autoplay playsinline
                 webkit-playsinline></video>
+            </div>
 
-              <!-- Video Switcher Overlay -->
-              <div style="position: absolute; bottom: 10px; left: 10px; display: flex; gap: 5px; z-index: 10;">
-                <button class="source-btn active" data-src="../media/loops/layer1_1.mp4" title="Abstracto">1</button>
-                <button class="source-btn" data-src="../media/loops/layer2_1.mp4" title="Geométrico">2</button>
-                <button class="source-btn" data-src="../media/loops/layer3_1.mp4" title="Real/Texto">3</button>
+            <!-- Thumbnail Source Switcher -->
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">
+              <div class="source-thumb active" data-src="../media/loops/layer1_1.mp4" title="Abstracto">
+                <video src="../media/loops/layer1_1.mp4" muted></video>
+                <div class="thumb-label">LOOP 1</div>
+              </div>
+              <div class="source-thumb" data-src="../media/loops/layer2_1.mp4" title="Geométrico">
+                <video src="../media/loops/layer2_1.mp4" muted></video>
+                <div class="thumb-label">LOOP 2</div>
+              </div>
+              <div class="source-thumb" data-src="../media/loops/layer3_1.mp4" title="Real/Texto">
+                <video src="../media/loops/layer3_1.mp4" muted></video>
+                <div class="thumb-label">LOOP 3</div>
               </div>
             </div>
-            <div class="hint-text" style="text-align: left;">
-              <i class="fas fa-info-circle"></i> Prueba el procesador con distintas texturas para ver cómo reaccionan
-              los efectos.
+
+            <div class="hint-text" style="text-align: center;">
+              <i class="fas fa-info-circle"></i> Selecciona un clip para procesar diferentes texturas.
             </div>
           </div>
 
@@ -443,16 +452,16 @@
       if (!isInverted) updateFilters(); // Restore base filters
     });
 
-    // Video Source Switcher Logic
-    const sourceBtns = document.querySelectorAll('.source-btn');
-    sourceBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const newSrc = btn.dataset.src;
+    // Video Source Switcher Logic (Thumbnails)
+    const sourceThumbs = document.querySelectorAll('.source-thumb');
+    sourceThumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const newSrc = thumb.dataset.src;
         video.src = newSrc;
         video.play();
 
-        sourceBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        sourceThumbs.forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
 
         // Re-apply filters after source change
         setTimeout(updateFilters, 50);
