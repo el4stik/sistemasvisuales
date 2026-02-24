@@ -186,7 +186,8 @@
         <div class="control-card">
           <h4><i class="fas fa-magic"></i> Feedback</h4>
           <div class="toggle-group">
-            <button class="toggle-btn" id="fx-ghost">GHOST EFFECT (Trails)</button>
+            <button class="toggle-btn" id="fx-ghost">MODO ECO (Ghost)</button>
+            <button class="toggle-btn" id="fx-rainbow">GHOST COLOR (RGB)</button>
             <button class="toggle-btn" id="fx-sharpen">SHARPEN / EDGE</button>
           </div>
         </div>
@@ -306,12 +307,8 @@
       if (activeFX.has('sharpen')) filter += 'contrast(200%) brightness(1.2) ';
       ctx.filter = filter || 'none';
 
-      // Applying Alpha for Ghosting
-      if (activeFX.has('ghost')) {
-        ctx.globalAlpha = 0.4; // More visible phantom frames
-      } else {
-        ctx.globalAlpha = 1.0;
-      }
+      // Opacidad del frame actual cuando hay ghosting
+      ctx.globalAlpha = activeFX.has('ghost') ? 0.35 : 1.0;
 
       const drawMirror = (h, v) => {
         ctx.save();
