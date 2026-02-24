@@ -11,81 +11,339 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body>
-  <div id="bg"></div>
-  <section class="section section-dark">
-    <div class="container">
+<style>
+  .simulator-container {
+    background: #0a0a0a;
+    border: 1px solid rgba(37, 212, 169, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 3rem 0;
+  }
 
-      <a href="../index.html" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
-        ← Volver al Taller
-      </a>
+  .sim-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+  }
 
-      <div class="class-header">
-        <h1 class="section-title">CAPTURAS DE PANTALLA Y VENTANAS</h1>
-        <p class="class-subtitle">Feedback, glitch y loops infinitos</p>
+  .monitor-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border: 2px solid var(--accent-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(37, 212, 169, 0.2);
+  }
+
+  #feedbackCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .controls-panel {
+    background: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+  }
+
+  .control-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .control-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .sim-slider {
+    width: 100%;
+    height: 4px;
+    appearance: none;
+    background: #333;
+    border-radius: 2px;
+    outline: none;
+  }
+
+  .sim-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: var(--accent-primary);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .sim-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 10px var(--accent-primary);
+  }
+
+  .sim-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: transparent;
+    border: 1px solid var(--accent-primary);
+    color: var(--accent-primary);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-top: 1rem;
+  }
+
+  .sim-btn:hover {
+    background: var(--accent-primary);
+    color: #000;
+  }
+
+  .sim-btn.active {
+    background: var(--accent-tertiary);
+    border-color: var(--accent-tertiary);
+    color: #fff;
+  }
+
+  .hint-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(37, 212, 169, 0.05);
+    border-left: 3px solid var(--accent-primary);
+    font-size: 0.85rem;
+    color: #aaa;
+  }
+
+  @media (max-width: 900px) {
+    .sim-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div id="bg"></div>
+<section class="section section-dark">
+  <div class="container">
+
+    <a href="../index.html" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+      ← Volver al Taller
+    </a>
+
+    <div class="class-header">
+      <h1 class="section-title">CAPTURAS Y FEEDBACK</h1>
+      <p class="class-subtitle">Dominando el bucle infinito y la captura de fuentes externas</p>
+    </div>
+
+    <div class="intro-grid">
+      <div class="intro-card">
+        <div class="icon-wrapper">
+          <i class="fas fa-desktop"></i>
+        </div>
+        <h3>Screen Capture</h3>
+        <p>Captura tu escritorio completo o ventanas específicas. Ideal para integrar visuales de otras apps o feeds de
+          redes sociales en tiempo real.</p>
       </div>
 
-      <div class="intro-grid">
+      <div class="intro-card">
+        <div class="icon-wrapper">
+          <i class="fas fa-sync-alt"></i>
+        </div>
+        <h3>Feedback Visual</h3>
+        <p>El "Efecto Túnel". Ocurre cuando capturas la misma salida que estás proyectando, creando una repetición
+          infinita que puedes manipular.</p>
+      </div>
 
-        <div class="intro-card">
-          <h3>Tipos de captura</h3>
-          <ul class="topic-list">
-            <li><i class="fas fa-check"></i> Pantalla completa</li>
-            <li><i class="fas fa-check"></i> Ventanas específicas</li>
-            <li><i class="fas fa-check"></i> Cámaras</li>
-          </ul>
+      <div class="intro-card">
+        <div class="icon-wrapper">
+          <i class="fas fa-random"></i>
+        </div>
+        <h3>Glitch Creativo</h3>
+        <p>Usa las capturas para crear errores controlados. Al mover ventanas o cambiar resoluciones, generas estéticas
+          digitales únicas.</p>
+      </div>
+    </div>
+
+    <!-- Simulator -->
+    <div class="simulator-container">
+      <h3 style="color: var(--accent-primary); margin-bottom: 1.5rem; text-align: center;">
+        <i class="fas fa-vial"></i> SIMULADOR DE FEEDBACK LOOP
+      </h3>
+
+      <div class="sim-grid">
+        <div class="monitor-wrapper">
+          <canvas id="feedbackCanvas"></canvas>
         </div>
 
-        <div class="intro-card">
-          <h3>Usos creativos</h3>
-          <ul class="topic-list">
-            <li><i class="fas fa-check"></i> Feedback visual</li>
-            <li><i class="fas fa-check"></i> Glitch</li>
-            <li><i class="fas fa-check"></i> Loops infinitos</li>
-            <li><i class="fas fa-check"></i> Delay visual</li>
-          </ul>
-          <div class="topic-goal experimental">
-            <i class="fas fa-flask"></i>
-            <strong>Aquí brillas con tu lado experimental 😈</strong>
+        <div class="controls-panel">
+          <div class="control-group">
+            <div class="control-header">
+              <span>ZOOM FEEDBACK</span>
+              <span id="zoom-val">1.02</span>
+            </div>
+            <input type="range" class="sim-slider" id="sim-zoom" min="0.9" max="1.2" step="0.01" value="1.02">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span>ROTACIÓN</span>
+              <span id="rotate-val">2°</span>
+            </div>
+            <input type="range" class="sim-slider" id="sim-rotate" min="-20" max="20" step="1" value="2">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span>OPACIDAD BUCLE</span>
+              <span id="opacity-val">0.95</span>
+            </div>
+            <input type="range" class="sim-slider" id="sim-opacity" min="0.5" max="1.0" step="0.01" value="0.95">
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <span>HUE SHIFT</span>
+              <span id="hue-val">0°</span>
+            </div>
+            <input type="range" class="sim-slider" id="sim-hue" min="0" max="360" step="5" value="0">
+          </div>
+
+          <button class="sim-btn" id="start-btn">INICIAR BUCLE</button>
+          <button class="sim-btn" id="reset-btn" style="border-color: #555; color: #888;">RESET</button>
+
+          <div class="hint-box">
+            <strong>Tip:</strong> El feedback se crea dibujando la pantalla sobre sí misma con una pequeña
+            transformación.
           </div>
         </div>
-
       </div>
-
-      <div class="cta-section">
-        <h3>Objetivo</h3>
-        <p>Aprender a capturar cualquier fuente y usarla creativamente dentro de tu performance.</p>
-        <br>
-
-      </div>
-
     </div>
-  </section>
-  <div class="topic-nav">
-    <a href="repaso.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
-    <a href="camara.html" class="next">Siguiente <i class="fas fa-arrow-right"></i></a>
+
+    <div class="cta-section">
+      <h3><i class="fas fa-terminal"></i> En Resolume:</h3>
+      <p>Utiliza el <strong>Screen Capture</strong> como fuente y envíalo a una capa. Luego usa esa capa como máscara o
+        fuente de otra para crear el feedback físico o digital.</p>
+    </div>
+
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
-  <script>
-    let vantaEffect = VANTA.FOG({
-      el: "#bg",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      highlightColor: 0x1d3a33,
-      midtoneColor: 0x0a1a14,
-      lowlightColor: 0x020b08,
-      baseColor: 0x010504,
-      blurFactor: 0.5,
-      speed: 0.2,
-      zoom: 1.0
+</section>
+
+<div class="topic-nav">
+  <a href="repaso.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
+  <a href="camara.html" class="next">Cámara en Vivo <i class="fas fa-arrow-right"></i></a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Vanta
+    try {
+      VANTA.FOG({
+        el: "#bg",
+        THREE: window.THREE,
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        highlightColor: 0x1d3a33,
+        midtoneColor: 0x0a1a14,
+        lowlightColor: 0x020b08,
+        baseColor: 0x010504,
+        blurFactor: 0.5,
+        speed: 0.2,
+        zoom: 1.0
+      });
+    } catch (e) { }
+
+    // Simulator Logic
+    const canvas = document.getElementById('feedbackCanvas');
+    const ctx = canvas.getContext('2d');
+    const zoomSlider = document.getElementById('sim-zoom');
+    const rotateSlider = document.getElementById('sim-rotate');
+    const opacitySlider = document.getElementById('sim-opacity');
+    const hueSlider = document.getElementById('sim-hue');
+    const startBtn = document.getElementById('start-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    canvas.width = 800;
+    canvas.height = 450;
+
+    let isRunning = false;
+    let frameId;
+
+    // Initial clear
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    function draw() {
+      if (!isRunning) return;
+
+      // Create temporary buffer
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(canvas, 0, 0);
+
+      // Apply transformations for feedback
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.scale(zoomSlider.value, zoomSlider.value);
+      ctx.rotate((rotateSlider.value * Math.PI) / 180);
+      ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+      ctx.globalAlpha = opacitySlider.value;
+      ctx.filter = `hue-rotate(${hueSlider.value}deg)`;
+      ctx.drawImage(tempCanvas, 0, 0);
+      ctx.restore();
+
+      // Draw a small "seed" in the middle to keep it going
+      ctx.fillStyle = 'rgba(37, 212, 169, 0.1)';
+      ctx.strokeStyle = '#25D4A9';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(canvas.width / 2 - 20, canvas.height / 2 - 20, 40, 40);
+
+      frameId = requestAnimationFrame(draw);
+    }
+
+    startBtn.addEventListener('click', () => {
+      isRunning = !isRunning;
+      startBtn.textContent = isRunning ? 'DETENER BUCLE' : 'INICIAR BUCLE';
+      startBtn.classList.toggle('active', isRunning);
+      if (isRunning) draw();
     });
-    window.addEventListener("scroll", () => {
-      const s = window.scrollY * 0.002;
-      vantaEffect.setOptions({ zoom: 1.0 + s, speed: 0.2 + s });
+
+    resetBtn.addEventListener('click', () => {
+      isRunning = false;
+      startBtn.textContent = 'INICIAR BUCLE';
+      startBtn.classList.remove('active');
+      cancelAnimationFrame(frameId);
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw a seed
+      ctx.strokeStyle = '#25D4A9';
+      ctx.strokeRect(canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
     });
-  </script>
+
+    // UI Value Updates
+    const upd = (s, v, suf = '') => s.addEventListener('input', () => document.getElementById(v).textContent = s.value + suf);
+    upd(zoomSlider, 'zoom-val');
+    upd(rotateSlider, 'rotate-val', '°');
+    upd(opacitySlider, 'opacity-val');
+    upd(hueSlider, 'hue-val', '°');
+
+    // Initial seed
+    ctx.strokeStyle = '#25D4A9';
+    ctx.strokeRect(canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
+  });
+</script>
 </body>
 
 </html>

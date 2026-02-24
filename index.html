@@ -537,12 +537,7 @@
     </section>
 
     <!-- Clase 3 Section -->
-    <section id="clase3" class="section locked-section">
-      <div class="locked-overlay">
-        <i class="fas fa-lock"></i>
-        <h3>Contenido Bloqueado</h3>
-        <p>Disponible el 24 de Febrero</p>
-      </div>
+    <section id="clase3" class="section">
       <div class="container">
         <div class="class-header">
           <h2 class="section-title">CLASE 3</h2>
@@ -761,27 +756,39 @@
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
 
   <script>
-    let vantaEffect = VANTA.FOG({
-      el: "#bg",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
+    document.addEventListener("DOMContentLoaded", () => {
+      let vantaEffect;
 
-      highlightColor: 0x9cffd5,
-      midtoneColor: 0x2c7a5f,
-      lowlightColor: 0x0a1f17,
-      baseColor: 0x020b08,
-      blurFactor: 0.11,
-      speed: 0.1,
-      zoom: 0.56
-    });
-    window.addEventListener("scroll", () => {
-      const s = window.scrollY * 0.002;
-      vantaEffect.setOptions({
-        zoom: 1 + s,
-        speed: 1.2 + s
+      try {
+        vantaEffect = VANTA.FOG({
+          el: "#bg",
+          THREE: window.THREE, // Ensure it uses the loaded THREE instance
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          highlightColor: 0x9cffd5,
+          midtoneColor: 0x2c7a5f,
+          lowlightColor: 0x0a1f17,
+          baseColor: 0x020b08,
+          blurFactor: 0.11,
+          speed: 0.1,
+          zoom: 0.56
+        });
+      } catch (err) {
+        console.error("Vanta initialization failed:", err);
+      }
+
+      window.addEventListener("scroll", () => {
+        if (vantaEffect) {
+          const s = window.scrollY * 0.002;
+          vantaEffect.setOptions({
+            zoom: 1 + s,
+            speed: 1.2 + s
+          });
+        }
       });
     });
+
     document.querySelectorAll('.topic-header').forEach(header => {
       header.addEventListener('click', () => {
         header.parentElement.classList.toggle('active');

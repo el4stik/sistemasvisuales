@@ -11,74 +11,485 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body>
-  <div id="bg"></div>
-  <section class="section section-dark">
-    <div class="container">
+<style>
+  .hybrid-deck {
+    background: #080808;
+    border: 1px solid rgba(37, 212, 169, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
 
+  .monitor-panel {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
 
+  .main-output {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: #000;
+    border: 2px solid var(--accent-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(37, 212, 169, 0.15);
+  }
 
-      <div class="class-header">
-        <h1 class="section-title">CONSTRUCCIÓN DE SET HÍBRIDO</h1>
-        <p class="class-subtitle">Integrando todos los elementos en tu performance</p>
-      </div>
+  #mainCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 
-      <div class="intro-grid">
+  .deck-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
 
-        <div class="intro-card">
-          <h3>Integración completa</h3>
-          <ul class="topic-list">
-            <li><i class="fas fa-check"></i> Cámara + clips + efectos + capturas</li>
-            <li><i class="fas fa-check"></i> Cómo improvisar en tiempo real</li>
-            <li><i class="fas fa-check"></i> Tips de performance real</li>
-          </ul>
-        </div>
+  .source-bank {
+    background: #111;
+    border: 1px solid #333;
+    padding: 1rem;
+    border-radius: 8px;
+  }
 
-        <div class="intro-card">
-          <h3>Tips prácticos</h3>
-          <ul class="topic-list">
-            <li><i class="fas fa-check"></i> Prepara tu flujo antes del show</li>
-            <li><i class="fas fa-check"></i> Mantén tu set flexible</li>
-            <li><i class="fas fa-check"></i> Experimenta sin miedo con efectos y capturas</li>
-          </ul>
-        </div>
+  .bank-title {
+    font-size: 0.7rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+  }
 
-      </div>
+  .clip-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
 
-      <div class="cta-section">
-        <h3>Objetivo</h3>
-        <p>Que tengas la capacidad de montar un set híbrido completo, combinando cámaras, capturas y efectos para un
-          performance dinámico y creativo.</p>
-        <br>
-      </div>
+  .clip-item {
+    aspect-ratio: 16/9;
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4px;
+    transition: all 0.2s;
+  }
 
+  .clip-item:hover {
+    border-color: var(--accent-primary);
+  }
+
+  .clip-item.active {
+    background: var(--accent-primary);
+    color: #000;
+    font-weight: bold;
+  }
+
+  .mixer-strip {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .fader {
+    width: 100%;
+    height: 4px;
+    appearance: none;
+    background: #333;
+    border-radius: 2px;
+  }
+
+  .fader::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 24px;
+    background: var(--accent-primary);
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  .crossfader-panel {
+    grid-column: 1 / -1;
+    background: #151515;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .master-fx {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    justify-content: center;
+  }
+
+  .fx-btn {
+    padding: 0.5rem 1rem;
+    background: #222;
+    border: 1px solid #444;
+    color: #aaa;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+  }
+
+  .fx-btn.active {
+    background: var(--accent-tertiary);
+    border-color: var(--accent-tertiary);
+    color: #fff;
+  }
+
+  .rec-btn {
+    background: #f00 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: bold;
+  }
+
+  .rec-btn.recording {
+    animation: pulseRed 1s infinite;
+  }
+
+  @keyframes pulseRed {
+    0% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  #rec-video {
+    display: none;
+  }
+</style>
+
+<div id="bg"></div>
+<section class="section section-dark">
+  <div class="container">
+
+    <a href="../index.html#clase3"
+      style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+      ← Volver a Clase 3
+    </a>
+
+    <div class="class-header">
+      <h1 class="section-title">HYBRID PERFORMANCE DECK</h1>
+      <p class="class-subtitle">Integrando Loops, Cámara y Spout en un solo flujo</p>
     </div>
-  </section>
-  <div class="topic-nav">
-    <a href="spout.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
-    <a href="../index.html" class="next">Volver al taller </a>
+
+    <div class="hybrid-deck">
+      <div class="monitor-panel">
+        <div class="main-output">
+          <canvas id="mainCanvas"></canvas>
+          <video id="cam-source" autoplay playsinline muted style="display:none"></video>
+          <div id="recording-status"
+            style="position:absolute; top:10px; right:10px; color:red; font-weight:bold; display:none">● REC</div>
+        </div>
+        <div class="source-bank" style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="bank-title">MASTER TOOLS</div>
+          <button class="fx-btn rec-btn" id="btn-rec">START RECORD</button>
+          <div id="download-link-container"></div>
+
+          <div class="mixer-strip">
+            <label style="font-size:0.6rem; color:#888">MASTER BRIGHTNESS</label>
+            <input type="range" class="fader" id="master-bright" min="50" max="150" value="100">
+          </div>
+
+          <div class="master-fx">
+            <button class="fx-btn" id="fx-glitch">GLITCH</button>
+            <button class="fx-btn" id="fx-invert">INVERT</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="deck-controls">
+        <!-- Bank A: Loops -->
+        <div class="source-bank">
+          <div class="bank-title">BANK A: LOOPS <span>CH 1</span></div>
+          <div class="clip-list">
+            <div class="clip-item active" data-bank="A" data-type="loop" data-src="../media/loops/layer1_1.mp4">CLIP 1
+            </div>
+            <div class="clip-item" data-bank="A" data-type="loop" data-src="../media/loops/layer2_1.mp4">CLIP 2</div>
+          </div>
+          <div class="mixer-strip">
+            <input type="range" class="fader" id="fader-A" min="0" max="100" value="100">
+          </div>
+        </div>
+
+        <!-- Bank B: Live -->
+        <div class="source-bank">
+          <div class="bank-title">BANK B: LIVE <span>CH 2</span></div>
+          <div class="clip-list">
+            <div class="clip-item" id="btn-cam" data-bank="B" data-type="cam">WEBCAM</div>
+            <div class="clip-item" data-bank="B" data-type="gen">GENERATIVE</div>
+          </div>
+          <div class="mixer-strip">
+            <input type="range" class="fader" id="fader-B" min="0" max="100" value="0">
+          </div>
+        </div>
+
+        <!-- Bank C: External -->
+        <div class="source-bank">
+          <div class="bank-title">BANK C: SPOUT <span>CH 3</span></div>
+          <div class="clip-list">
+            <div class="clip-item" data-bank="C" data-type="spout">SPOUT 1</div>
+            <div class="clip-item" data-bank="C" data-type="spout" data-mode="tri">SPOUT 2</div>
+          </div>
+          <div class="mixer-strip">
+            <input type="range" class="fader" id="fader-C" min="0" max="100" value="0">
+          </div>
+        </div>
+
+        <div class="crossfader-panel">
+          <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.7rem; color:#888">
+            <span>A / B / C MIXER</span>
+            <span id="xfade-val">CH 1 ALPHA</span>
+          </div>
+          <input type="range" class="fader" id="master-xfade" min="0" max="100" value="0" style="height:10px">
+        </div>
+      </div>
+    </div>
+
+    <div class="intro-grid">
+      <div class="intro-card">
+        <h3>Flujo de Trabajo</h3>
+        <p>Este simulador combina todo lo aprendido. El Canal 1 maneja archivos grabados (loops), el Canal 2 integra
+          video real y el Canal 3 simula la entrada de otras aplicaciones.</p>
+      </div>
+      <div class="intro-card" style="border-color: var(--accent-tertiary)">
+        <h3>Grabación Visual</h3>
+        <p>Utiliza el botón <strong>REC</strong> para grabar tu performance directamente en el navegador. Al terminar,
+          podrás descargar el archivo de video resultante.</p>
+      </div>
+    </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
-  <script>
-    let vantaEffect = VANTA.FOG({
-      el: "#bg",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      highlightColor: 0x1d3a33,
-      midtoneColor: 0x0a1a14,
-      lowlightColor: 0x020b08,
-      baseColor: 0x010504,
-      blurFactor: 0.5,
-      speed: 0.2,
-      zoom: 1.0
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Vanta
+    try {
+      VANTA.FOG({
+        el: "#bg", THREE: window.THREE,
+        highlightColor: 0x1d3a33, midtoneColor: 0x0a1a14,
+        lowlightColor: 0x020b08, baseColor: 0x010504,
+        blurFactor: 0.5, speed: 0.2, zoom: 1.0
+      });
+    } catch (e) { }
+
+    // --- DECK LOGIC ---
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    const camVideo = document.getElementById('cam-source');
+
+    canvas.width = 1280; canvas.height = 720;
+
+    // State
+    const state = {
+      A: { type: 'loop', active: true, opacity: 1, element: null },
+      B: { type: 'cam', active: false, opacity: 0, element: null },
+      C: { type: 'spout', active: false, opacity: 0, mode: 'circ' },
+      master: { bright: 1, fx: { glitch: false, invert: false } },
+      recording: { active: false, recorder: null, chunks: [] }
+    };
+
+    // Hidden videos for loops
+    const loopVideos = {};
+    document.querySelectorAll('.clip-item[data-type="loop"]').forEach(item => {
+      const v = document.createElement('video');
+      v.src = item.dataset.src;
+      v.loop = true; v.muted = true; v.playsInline = true;
+      loopVideos[item.dataset.src] = v;
+      if (item.classList.contains('active')) state.A.element = v;
     });
-    window.addEventListener("scroll", () => {
-      const s = window.scrollY * 0.002;
-      vantaEffect.setOptions({ zoom: 1.0 + s, speed: 0.2 + s });
+
+    // UI Handlers
+    document.querySelectorAll('.clip-item').forEach(item => {
+      item.addEventListener('click', async () => {
+        const bank = item.dataset.bank;
+        document.querySelectorAll(`.clip-item[data-bank="${bank}"]`).forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        if (item.dataset.type === 'loop') {
+          const v = loopVideos[item.dataset.src];
+          if (state[bank].element) state[bank].element.pause();
+          state[bank].element = v;
+          v.play();
+        } else if (item.dataset.type === 'cam') {
+          try {
+            // Security Check
+            if (!window.isSecureContext) {
+              alert("La cámara requiere una conexión segura (HTTPS) o Localhost.\nSi usas file:// no funcionará.");
+              return;
+            }
+
+            if (!camVideo.srcObject) {
+              const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+              camVideo.srcObject = stream;
+              await camVideo.play();
+            }
+            state[bank].element = camVideo;
+          } catch (e) {
+            console.error("Camera access error:", e);
+            alert(`Error de cámara: ${e.name}\n${e.message}`);
+          }
+        } else if (item.dataset.type === 'gen') {
+          state[bank].element = 'gen';
+        } else if (item.dataset.type === 'spout') {
+          state[bank].mode = item.dataset.mode || 'circ';
+        }
+      });
     });
-  </script>
+
+    // Faders
+    const updOpacity = (id, bank) => document.getElementById(id).addEventListener('input', (e) => state[bank].opacity = e.target.value / 100);
+    updOpacity('fader-A', 'A');
+    updOpacity('fader-B', 'B');
+    updOpacity('fader-C', 'C');
+    document.getElementById('master-bright').addEventListener('input', (e) => state.master.bright = e.target.value / 100);
+
+    // FX
+    const toggleFX = (id, fx) => document.getElementById(id).addEventListener('click', (e) => {
+      state.master.fx[fx] = !state.master.fx[fx];
+      e.target.classList.toggle('active');
+    });
+    toggleFX('fx-glitch', 'glitch');
+    toggleFX('fx-invert', 'invert');
+
+    // Recording
+    const recBtn = document.getElementById('btn-rec');
+    recBtn.addEventListener('click', () => {
+      if (!state.recording.active) {
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    });
+
+    function startRecording() {
+      state.recording.active = true;
+      state.recording.chunks = [];
+      const stream = canvas.captureStream(30);
+      const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+
+      recorder.ondataavailable = (e) => state.recording.chunks.push(e.data);
+      recorder.onstop = saveRecording;
+
+      recorder.start();
+      state.recording.recorder = recorder;
+      recBtn.textContent = "STOP RECORDING";
+      recBtn.classList.add('recording');
+      document.getElementById('recording-status').style.display = 'block';
+    }
+
+    function stopRecording() {
+      state.recording.active = false;
+      state.recording.recorder.stop();
+      recBtn.textContent = "START RECORD";
+      recBtn.classList.remove('recording');
+      document.getElementById('recording-status').style.display = 'none';
+    }
+
+    function saveRecording() {
+      const blob = new MediaBlob(state.recording.chunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      const container = document.getElementById('download-link-container');
+      container.innerHTML = `<a href="${url}" download="hybrid_set_recording.webm" class="fx-btn" style="text-decoration:none; display:block; margin-top:10px; text-align:center; background: #25D4A9 !important; color:#000 !important">DOWNLOAD CLIP</a>`;
+    }
+
+    // Render Loop
+    let time = 0;
+    function render() {
+      time += 0.05;
+
+      ctx.save();
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // CHANNEL 1: Loops (Bottom)
+      if (state.A.element && state.A.opacity > 0) {
+        ctx.globalAlpha = state.A.opacity;
+        ctx.drawImage(state.A.element, 0, 0, canvas.width, canvas.height);
+      }
+
+      // CHANNEL 2: Live
+      if (state.B.opacity > 0) {
+        ctx.globalAlpha = state.B.opacity;
+        if (state.B.element === camVideo) {
+          ctx.drawImage(camVideo, 0, 0, canvas.width, canvas.height);
+        } else {
+          // Generative
+          ctx.strokeStyle = '#25D4A9'; ctx.lineWidth = 5;
+          for (let i = 0; i < 10; i++) {
+            ctx.strokeRect(canvas.width / 2 - 50 * i + Math.tan(time) * 10, canvas.height / 2 - 50 * i, 100 * i, 100 * i);
+          }
+        }
+      }
+
+      // CHANNEL 3: Spout (Sim)
+      if (state.C.opacity > 0) {
+        ctx.globalAlpha = state.C.opacity;
+        ctx.fillStyle = '#25D4A9';
+        if (state.C.mode === 'tri') {
+          ctx.beginPath();
+          ctx.moveTo(time * 10 % canvas.width, 100); ctx.lineTo(100, 400); ctx.lineTo(500, 400);
+          ctx.fill();
+        } else {
+          // Circles
+          for (let i = 0; i < 3; i++) {
+            ctx.beginPath(); ctx.arc(canvas.width / 2 + Math.cos(time + i) * 100, canvas.height / 2 + Math.sin(time * 2 + i) * 100, 50, 0, Math.PI * 2); ctx.fill();
+          }
+        }
+      }
+
+      // MASTER FX
+      ctx.restore();
+      if (state.master.fx.invert) {
+        ctx.globalCompositeOperation = 'difference';
+        ctx.fillStyle = 'white'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = 'source-over';
+      }
+
+      if (state.master.fx.glitch && Math.random() > 0.9) {
+        const sliceY = Math.random() * canvas.height;
+        const sliceH = Math.random() * 50;
+        ctx.drawImage(canvas, 0, sliceY, canvas.width, sliceH, Math.random() * 20 - 10, sliceY, canvas.width, sliceH);
+      }
+
+      ctx.filter = `brightness(${state.master.bright * 100}%)`;
+
+      requestAnimationFrame(render);
+    }
+
+    // Initial Play for Bank A
+    if (state.A.element) state.A.element.play();
+    render();
+  });
+
+  // Helper for older browsers
+  const MediaBlob = window.Blob;
+</script>
 </body>
 
 </html>

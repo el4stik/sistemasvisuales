@@ -11,78 +11,318 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body>
-  <div id="bg"></div>
-  <section class="section section-dark">
-    <div class="container">
+<style>
+  .spout-simulator {
+    background: #0a0a0a;
+    border: 1px solid rgba(37, 212, 169, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 3rem 0;
+  }
 
-      <a href="../index.html" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
-        ← Volver al Taller
-      </a>
+  .spout-grid {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    align-items: center;
+    gap: 1rem;
+  }
 
-      <div class="class-header">
-        <h1 class="section-title">SPOUT + FLUJO HÍBRIDO</h1>
-        <p class="class-subtitle">Conectar y enviar video entre aplicaciones</p>
-      </div>
+  .app-panel {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    position: relative;
+  }
 
-      <div class="intro-grid">
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #222;
+  }
 
-        <div class="intro-card">
-          <h3>Qué es Spout</h3>
-          <p>
-            Spout permite enviar y recibir video en tiempo real entre diferentes programas de Windows, como
-            TouchDesigner, Resolume y OBS.
-          </p>
-        </div>
+  .app-title {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #888;
+    text-transform: uppercase;
+  }
 
-        <div class="intro-card">
-          <h3>Ejemplos de integración</h3>
-          <ul class="topic-list">
-            <li><i class="fas fa-check"></i> TouchDesigner → Resolume</li>
-            <li><i class="fas fa-check"></i> OBS → Resolume</li>
-            <li><i class="fas fa-check"></i> IA → Resolume</li>
-          </ul>
-          <div class="topic-goal">
-            <i class="fas fa-bullseye"></i>
-            <strong>Mostrar posibilidades reales sin abrumar</strong>
-          </div>
-        </div>
+  .spout-tag {
+    font-size: 0.6rem;
+    background: var(--accent-primary);
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-weight: 800;
+  }
 
-      </div>
+  .app-monitor {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #000;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #444;
+  }
 
-      <div class="cta-section">
-        <h3>Objetivo</h3>
-        <p>Aprender a crear un flujo híbrido que combine varias fuentes en tu performance en vivo.</p>
-        <br>
-      </div>
+  #senderCanvas,
+  #receiverCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 
+  .flow-arrow {
+    font-size: 2rem;
+    color: var(--accent-primary);
+    text-align: center;
+    animation: flowRight 1.5s infinite linear;
+  }
+
+  @keyframes flowRight {
+    0% {
+      opacity: 0.2;
+      transform: translateX(-10px);
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0.2;
+      transform: translateX(10px);
+    }
+  }
+
+  .gpu-link {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    background: rgba(37, 212, 169, 0.05);
+    border: 1px dashed var(--accent-primary);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    color: var(--accent-primary);
+  }
+
+  .integration-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .software-tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: #222;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    margin-right: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  @media (max-width: 768px) {
+    .spout-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .flow-arrow {
+      transform: rotate(90deg);
+      animation: flowDown 1.5s infinite linear;
+    }
+  }
+
+  @keyframes flowDown {
+    0% {
+      opacity: 0.2;
+      transform: translateY(-10px) rotate(90deg);
+    }
+
+    50% {
+      opacity: 1;
+      transform: translateY(0) rotate(90deg);
+    }
+
+    100% {
+      opacity: 0.2;
+      transform: translateY(10px) rotate(90deg);
+    }
+  }
+</style>
+
+<div id="bg"></div>
+<section class="section section-dark">
+  <div class="container">
+
+    <a href="../index.html" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+      ← Volver al Taller
+    </a>
+
+    <div class="class-header">
+      <h1 class="section-title">SPOUT Y FLUJO HÍBRIDO</h1>
+      <p class="class-subtitle">Interconectando herramientas creativas en tiempo real</p>
     </div>
-  </section>
-  <div class="topic-nav">
-    <a href="camara.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
-    <a href="sethibrido.html" class="next">Siguiente <i class="fas fa-arrow-right"></i></a>
+
+    <!-- Simulator -->
+    <div class="spout-simulator">
+      <h3 style="color: var(--accent-primary); margin-bottom: 2rem; text-align: center;">
+        <i class="fas fa-project-diagram"></i> SPOUT PROTOCOL SIMULATOR
+      </h3>
+
+      <div class="spout-grid">
+        <!-- Sender App -->
+        <div class="app-panel">
+          <div class="app-header">
+            <span class="app-title">TOUCHDESIGNER / SYPHON</span>
+            <span class="spout-tag">SENDER</span>
+          </div>
+          <div class="app-monitor">
+            <canvas id="senderCanvas"></canvas>
+          </div>
+          <p style="font-size: 0.6rem; color: #666; margin-top: 0.5rem;">Generando patrón matemático...</p>
+        </div>
+
+        <!-- Arrow -->
+        <div class="flow-arrow">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+
+        <!-- Receiver App -->
+        <div class="app-panel">
+          <div class="app-header">
+            <span class="app-title">RESOLUME AVENUE</span>
+            <span class="spout-tag">RECEIVER</span>
+          </div>
+          <div class="app-monitor">
+            <canvas id="receiverCanvas"></canvas>
+          </div>
+          <p style="font-size: 0.6rem; color: #666; margin-top: 0.5rem;">Recibiendo textura Spout...</p>
+        </div>
+
+        <div class="gpu-link">
+          <i class="fas fa-bolt"></i> GPU SHARED MEMORY (Zero Latency Transfer)
+        </div>
+      </div>
+    </div>
+
+    <div class="intro-grid">
+      <div class="intro-card">
+        <h3>¿Cómo funciona?</h3>
+        <p>A diferencia de un cable físico, Spout comparte la textura directamente en la memoria de la tarjeta de video
+          (GPU). Esto permite que dos programas usen la misma imagen simultáneamente sin carga extra para el procesador.
+        </p>
+      </div>
+
+      <div class="intro-card">
+        <h3>Principales Usos</h3>
+        <div style="margin-top: 1rem;">
+          <span class="software-tag">TouchDesigner</span>
+          <span class="software-tag">OBS Studio</span>
+          <span class="software-tag">Processing</span>
+          <span class="software-tag">Unreal Engine</span>
+          <span class="software-tag">Generative AI</span>
+          <span class="software-tag">Web Browsers</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="integration-grid">
+      <div class="intro-card">
+        <h4><i class="fab fa-obs"></i> OBS a Resolume</h4>
+        <p style="font-size: 0.9rem;">Usa el plugin "OBS-Spout2-Source" para enviar tu stream o webcam procesada
+          directamente como un clip a Resolume.</p>
+      </div>
+      <div class="intro-card">
+        <h4><i class="fas fa-brain"></i> IA Híbrida</h4>
+        <p style="font-size: 0.9rem;">Genera visuals con Stable Diffusion o ComfyUI y envíalos vía Spout para mezclarlos
+          con tus loops locales.</p>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h3>Nota para Mac:</h3>
+      <p>En macOS, el protocolo equivalente se llama <strong>Syphon</strong>. Funciona exactamente igual y es compatible
+        con el mismo flujo de trabajo.</p>
+    </div>
+
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
-  <script>
-    let vantaEffect = VANTA.FOG({
-      el: "#bg",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      highlightColor: 0x1d3a33,
-      midtoneColor: 0x0a1a14,
-      lowlightColor: 0x020b08,
-      baseColor: 0x010504,
-      blurFactor: 0.5,
-      speed: 0.2,
-      zoom: 1.0
-    });
-    window.addEventListener("scroll", () => {
-      const s = window.scrollY * 0.002;
-      vantaEffect.setOptions({ zoom: 1.0 + s, speed: 0.2 + s });
-    });
-  </script>
+</section>
+
+<div class="topic-nav">
+  <a href="camara.html" class="prev"><i class="fas fa-arrow-left"></i> Anterior</a>
+  <a href="sethibrido.html" class="next">Práctica Híbrida <i class="fas fa-arrow-right"></i></a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Vanta
+    try {
+      VANTA.FOG({
+        el: "#bg",
+        THREE: window.THREE,
+        mouseControls: true, touchControls: true,
+        highlightColor: 0x1d3a33, midtoneColor: 0x0a1a14,
+        lowlightColor: 0x020b08, baseColor: 0x010504,
+        blurFactor: 0.5, speed: 0.2, zoom: 1.0
+      });
+    } catch (e) { }
+
+    // Spout Simulator Logic
+    const sender = document.getElementById('senderCanvas');
+    const receiver = document.getElementById('receiverCanvas');
+    const sCtx = sender.getContext('2d');
+    const rCtx = receiver.getContext('2d');
+
+    sender.width = receiver.width = 400;
+    sender.height = receiver.height = 300;
+
+    let time = 0;
+
+    function animate() {
+      time += 0.02;
+
+      // 1. Draw Generative Pattern on SENDER
+      sCtx.fillStyle = '#000';
+      sCtx.fillRect(0, 0, sender.width, sender.height);
+
+      for (let i = 0; i < 5; i++) {
+        const x = sender.width / 2 + Math.cos(time + i * 0.5) * 80;
+        const y = sender.height / 2 + Math.sin(time * 1.2 + i * 0.8) * 60;
+
+        const grad = sCtx.createRadialGradient(x, y, 5, x, y, 40);
+        grad.addColorStop(0, '#25D4A9');
+        grad.addColorStop(1, 'transparent');
+
+        sCtx.fillStyle = grad;
+        sCtx.beginPath();
+        sCtx.arc(x, y, 40, 0, Math.PI * 2);
+        sCtx.fill();
+      }
+
+      // 2. "Transfer" to RECEIVER (Simulated)
+      rCtx.clearRect(0, 0, receiver.width, receiver.height);
+      rCtx.drawImage(sender, 0, 0);
+
+      // Add a small "glitch" or label to receiver to differentiate
+      rCtx.fillStyle = 'rgba(37, 212, 169, 0.2)';
+      rCtx.font = '10px Inter';
+      rCtx.fillText("STREAMING ACTIVE", 10, 20);
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  });
+</script>
 </body>
 
 </html>
