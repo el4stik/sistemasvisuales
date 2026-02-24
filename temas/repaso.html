@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,53 +9,196 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .explorer-container {
+      position: relative;
+      width: 100%;
+      margin: 3rem 0;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .explorer-image-wrapper {
+      position: relative;
+      width: 100%;
+      cursor: crosshair;
+    }
+
+    .explorer-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+
+    .hotspot {
+      position: absolute;
+      border: 2px solid transparent;
+      background: rgba(37, 212, 169, 0.05);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+    }
+
+    .hotspot:hover {
+      border-color: var(--accent-primary);
+      background: rgba(37, 212, 169, 0.15);
+      box-shadow: 0 0 20px rgba(37, 212, 169, 0.4);
+    }
+
+    /* Hotspots para Repaso (Basados en la imagen de Resolume) */
+    .hs-flujo {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 15%;
+    }
+
+    .hs-capas {
+      top: 15%;
+      left: 0;
+      width: 16.4%;
+      height: 50%;
+    }
+
+    .hs-clips {
+      top: 15%;
+      left: 16.4%;
+      width: 83.6%;
+      height: 50%;
+    }
+
+    .hs-efectos {
+      top: 65%;
+      left: 29.4%;
+      width: 50.1%;
+      height: 35%;
+    }
+
+    .info-panel {
+      padding: 2.5rem;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      min-height: 180px;
+      transition: all 0.4s;
+    }
+
+    .info-title {
+      font-size: 1.8rem;
+      color: var(--accent-primary);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .info-description {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .active-hotspot {
+      border-color: var(--accent-primary) !important;
+      background: rgba(37, 212, 169, 0.2) !important;
+    }
+  </style>
 </head>
 
 <body>
-<section class="section section-dark">
-  <div class="container">
+  <section class="section section-dark">
+    <div class="container">
 
-    <a href="../index.html" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
-      ← Volver al Taller
-    </a>
+      <a href="../index.html" style="color:#25D4A9; text-decoration:none; display:inline-block; margin-bottom:2rem;">
+        ← Volver al Taller
+      </a>
 
-    <div class="class-header">
-      <h1 class="section-title">REPASO RÁPIDO</h1>
-      <p class="class-subtitle">Recordando conceptos clave</p>
-    </div>
-
-    <div class="intro-grid">
-
-      <div class="intro-card">
-        <h3>Qué veremos</h3>
-        <p>
-          Antes de entrar a capturas y cámaras, repasaremos lo esencial de Resolume y performance: flujo, capas, clips y efectos.
-        </p>
+      <div class="class-header">
+        <h1 class="section-title">REPASO RÁPIDO</h1>
+        <p class="class-subtitle">Recordando conceptos clave</p>
       </div>
 
-      <div class="intro-card">
-        <h3>Puntos clave</h3>
-        <ul class="topic-list">
-          <li><i class="fas fa-check"></i> Flujo de trabajo</li>
-          <li><i class="fas fa-check"></i> Manejo de capas</li>
-          <li><i class="fas fa-check"></i> Clips y triggers</li>
-          <li><i class="fas fa-check"></i> Efectos y ajustes básicos</li>
-        </ul>
+      <div class="intro-grid">
+        <div class="intro-card" style="grid-column: 1 / -1;">
+          <h3>Explorador de Conceptos</h3>
+          <p style="text-align: center; color: var(--text-muted); font-style: italic; margin-bottom: 1rem;">
+            Pasa el mouse sobre el área correspondiente de la interfaz para repasar cada pilar.
+          </p>
+
+          <div class="explorer-container">
+            <div class="explorer-image-wrapper">
+              <img src="../media/resolume_ui.png" alt="Repaso Conceptos" class="explorer-image">
+
+              <div class="hotspot hs-flujo" data-title="1. Flujo de Trabajo"
+                data-desc="Entender la ruta de la señal: desde la carga de archivos en el navegador hasta la salida maestra. La organización es la clave de una performance fluida.">
+              </div>
+              <div class="hotspot hs-capas" data-title="2. Manejo de Capas"
+                data-desc="Las capas funcionan como acetatos: lo que está arriba tapa lo de abajo según su opacidad y modo de mezcla (Add, Screen, Alpha).">
+              </div>
+              <div class="hotspot hs-clips" data-title="3. Clips y Triggers"
+                data-desc="Disparar en el momento justo. Aprender los modos de reproducción (Loop, Once, Bounce) y el comportamiento de las columnas.">
+              </div>
+              <div class="hotspot hs-efectos" data-title="4. Efectos y Ajustes"
+                data-desc="Manipulación en tiempo real. Aplicar filtros, ajustar parámetros y usar macros para transformar radicalmente la imagen.">
+              </div>
+            </div>
+          </div>
+
+          <div class="info-panel" id="infoPanel">
+            <div class="info-title" id="infoTitle">
+              <i class="fas fa-mouse-pointer"></i>
+              <span>Selecciona un tema</span>
+            </div>
+            <p class="info-description" id="infoDesc">
+              Explora los pilares fundamentales del taller antes de pasar a la práctica con cámaras.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h3>Objetivo</h3>
+        <p>Refrescar conocimientos para entrar con confianza en los temas de captura y entrada externa.</p>
+        <br>
       </div>
 
     </div>
-
-    <div class="cta-section">
-      <h3>Objetivo</h3>
-      <p>Refrescar conocimientos para entrar con confianza en los temas de captura y entrada externa.</p>
-      <br>
-   </div>
-
+  </section>
+  <div class="topic-nav">
+    <span></span> <!-- No hay anterior -->
+    <a href="capturas.html" class="next">Siguiente <i class="fas fa-arrow-right"></i></a>
   </div>
-</section>
-<div class="topic-nav">
-  <span></span> <!-- No hay anterior -->
-  <a href="capturas.html" class="next">Siguiente <i class="fas fa-arrow-right"></i></a>
-</div>
+  <script>
+    const hotspots = document.querySelectorAll('.hotspot');
+    const infoTitle = document.getElementById('infoTitle');
+    const infoDesc = document.getElementById('infoDesc');
+
+    const defaultTitle = 'Selecciona un tema';
+    const defaultDesc = 'Explora los pilares fundamentales del taller antes de pasar a la práctica con cámaras.';
+
+    hotspots.forEach(hs => {
+      hs.addEventListener('mouseenter', () => {
+        const title = hs.getAttribute('data-title');
+        const desc = hs.getAttribute('data-desc');
+
+        infoTitle.innerHTML = `<i class="fas fa-info-circle"></i> <span>${title}</span>`;
+        infoDesc.textContent = desc;
+        hs.classList.add('active-hotspot');
+      });
+
+      hs.addEventListener('mouseleave', () => {
+        infoTitle.innerHTML = `<i class="fas fa-mouse-pointer"></i> <span>${defaultTitle}</span>`;
+        infoDesc.textContent = defaultDesc;
+        hs.classList.remove('active-hotspot');
+      });
+    });
+  </script>
 </body>
+
 </html>
