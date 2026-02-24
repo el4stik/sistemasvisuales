@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Repaso - Clase 3</title>
+  <title>Repaso - Taller Visuales</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
       display: block;
       width: 100%;
       height: auto;
-      opacity: 0.8;
+      opacity: 0.9;
       transition: opacity 0.3s;
     }
 
@@ -45,11 +45,14 @@
 
     .hotspot:hover {
       border-color: var(--accent-primary);
-      background: rgba(37, 212, 169, 0.15);
-      box-shadow: 0 0 20px rgba(37, 212, 169, 0.4);
+      background: rgba(37, 212, 169, 0.3);
+      /* Más opacidad */
+      box-shadow: 0 0 40px rgba(37, 212, 169, 0.8), inset 0 0 20px rgba(37, 212, 169, 0.4);
+      /* Glow doble */
+      transform: scale(1.02);
     }
 
-    /* Definición de Áreas (Refinado con precisión quirúrgica) */
+    /* Definición de Áreas (Refinado con precisión quirúrgica de interfaz.html) */
     .hs-layers {
       top: 3.8%;
       left: 0;
@@ -102,16 +105,166 @@
       font-size: 1.2rem;
       color: var(--text-secondary);
       line-height: 1.7;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hint-text {
+      text-align: center;
+      color: var(--text-muted);
+      margin: 1rem 0;
+      font-style: italic;
     }
 
     .active-hotspot {
       border-color: var(--accent-primary) !important;
       background: rgba(37, 212, 169, 0.2) !important;
     }
+
+    /* Modal de Vista Detallada */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      width: 90%;
+      max-width: 1200px;
+      background: var(--bg-card);
+      border: 1px solid var(--accent-primary);
+      border-radius: 15px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      position: relative;
+      transform: scale(0.9) translateY(20px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .zoom-view {
+      height: 600px;
+      background: #000;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .zoom-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform-origin: center;
+      transition: transform 0.5s ease;
+    }
+
+    .modal-sidebar {
+      padding: 2.5rem;
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      color: var(--text-muted);
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 10;
+      transition: color 0.3s;
+    }
+
+    .close-modal:hover {
+      color: var(--accent-primary);
+    }
+
+    .modal-info-title {
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      font-weight: 700;
+    }
+
+    .modal-info-desc {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .click-hint {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.8rem;
+      color: var(--accent-primary);
+      background: rgba(0, 0, 0, 0.6);
+      padding: 4px 8px;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .hotspot:hover .click-hint {
+      opacity: 1;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .modal-content {
+        grid-template-columns: 1fr;
+        width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .zoom-view {
+        height: 250px;
+      }
+
+      .modal-sidebar {
+        padding: 1.5rem;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div id="bg"></div>
+
   <section class="section section-dark">
     <div class="container">
 
@@ -120,32 +273,38 @@
       </a>
 
       <div class="class-header">
-        <h1 class="section-title">REPASO RÁPIDO</h1>
-        <p class="class-subtitle">Recordando conceptos clave</p>
+        <h1 class="section-title">REPASO INTERACTIVO</h1>
+        <p class="class-subtitle">Recordando los pilares de la Clase 1 y 2</p>
       </div>
 
       <div class="intro-grid">
         <div class="intro-card" style="grid-column: 1 / -1;">
           <h3>Explorador de Conceptos</h3>
-          <p style="text-align: center; color: var(--text-muted); font-style: italic; margin-bottom: 1rem;">
-            Pasa el mouse sobre el área correspondiente de la interfaz para repasar cada pilar.
-          </p>
+          <p class="hint-text">Pasa el mouse sobre el área correspondiente de la interfaz para repasar cada pilar.</p>
 
           <div class="explorer-container">
-            <div class="explorer-image-wrapper">
-              <img src="../media/resolume_ui.png" alt="Repaso Conceptos" class="explorer-image">
+            <div class="explorer-image-wrapper" id="explorerWrapper">
+              <img src="../media/resolume_ui.png" alt="Resolume Interface" class="explorer-image">
 
               <div class="hotspot hs-browser" data-title="1. Flujo de Trabajo"
-                data-desc="Entender la ruta de la señal: desde el navegador de archivos hasta la composición final. La organización es la clave de una performance fluida.">
+                data-desc="Entender la ruta de la señal: desde el navegador de archivos hasta la composición final. La organización es la clave de una performance fluida."
+                data-img="browser_ui.png">
+                <span class="click-hint"><i class="fas fa-search-plus"></i> Ver detalle</span>
               </div>
               <div class="hotspot hs-layers" data-title="2. Manejo de Capas"
-                data-desc="Las capas funcionan como acetatos: lo que está arriba tapa lo de abajo según su opacidad y modo de mezcla.">
+                data-desc="Las capas funcionan como acetatos: lo que está arriba tapa lo de abajo según su opacidad y modo de mezcla."
+                data-img="layers_ui.png">
+                <span class="click-hint"><i class="fas fa-search-plus"></i> Ver detalle</span>
               </div>
               <div class="hotspot hs-clips" data-title="3. Clips y Triggers"
-                data-desc="Disparar en el momento justo. Aprender los modos de reproducción y el comportamiento de las columnas para crear dinámicas.">
+                data-desc="Disparar en el momento justo. Aprender los modos de reproducción y el comportamiento de las columnas para crear dinámicas."
+                data-img="clips_ui.png">
+                <span class="click-hint"><i class="fas fa-search-plus"></i> Ver detalle</span>
               </div>
               <div class="hotspot hs-dashboard" data-title="4. Efectos y Ajustes"
-                data-desc="Manipulación en tiempo real. Aplicar filtros y ajustar parámetros para transformar radicalmente la imagen.">
+                data-desc="Manipulación en tiempo real. Aplicar filtros y ajustar parámetros para transformar radicalmente la imagen."
+                data-img="dashboard_ui.png">
+                <span class="click-hint"><i class="fas fa-search-plus"></i> Ver detalle</span>
               </div>
             </div>
           </div>
@@ -162,41 +321,80 @@
         </div>
       </div>
 
-      <div class="cta-section">
-        <h3>Objetivo</h3>
-        <p>Refrescar conocimientos para entrar con confianza en los temas de captura y entrada externa.</p>
-        <br>
-      </div>
-
     </div>
+
+    <div class="cta-section">
+      <h3>Objetivo</h3>
+      <p>Refrescar conocimientos para entrar con confianza en los temas de captura y entrada externa.</p>
+    </div>
+
+    <div class="topic-nav">
+      <span></span>
+      <a href="capturas.html" class="next">Siguiente <i class="fas fa-arrow-right"></i></a>
+    </div>
+
   </section>
-  <div class="topic-nav">
-    <span></span> <!-- No hay anterior -->
-    <a href="capturas.html" class="next">Siguiente <i class="fas fa-arrow-right"></i></a>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <div class="zoom-view">
+        <img src="../media/resolume_ui.png" alt="Zoom Detail" class="zoom-image" id="zoomImage">
+      </div>
+      <div class="modal-sidebar">
+        <h4 class="modal-info-title" id="modalTitle">Detalle</h4>
+        <p class="modal-info-desc" id="modalDesc">Explicación.</p>
+      </div>
+    </div>
   </div>
+
   <script>
     const hotspots = document.querySelectorAll('.hotspot');
     const infoTitle = document.getElementById('infoTitle');
     const infoDesc = document.getElementById('infoDesc');
-
-    const defaultTitle = 'Selecciona un tema';
-    const defaultDesc = 'Explora los pilares fundamentales del taller antes de pasar a la práctica con cámaras.';
+    const modalOverlay = document.getElementById('modalOverlay');
+    const zoomImage = document.getElementById('zoomImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const closeModal = document.getElementById('closeModal');
 
     hotspots.forEach(hs => {
       hs.addEventListener('mouseenter', () => {
         const title = hs.getAttribute('data-title');
         const desc = hs.getAttribute('data-desc');
-
         infoTitle.innerHTML = `<i class="fas fa-info-circle"></i> <span>${title}</span>`;
         infoDesc.textContent = desc;
         hs.classList.add('active-hotspot');
       });
-
       hs.addEventListener('mouseleave', () => {
-        infoTitle.innerHTML = `<i class="fas fa-mouse-pointer"></i> <span>${defaultTitle}</span>`;
-        infoDesc.textContent = defaultDesc;
+        infoTitle.innerHTML = `<i class="fas fa-mouse-pointer"></i> <span>Selecciona un tema</span>`;
+        infoDesc.textContent = 'Explora los pilares fundamentales del taller antes de pasar a la práctica con cámaras.';
         hs.classList.remove('active-hotspot');
       });
+      hs.addEventListener('click', () => {
+        const title = hs.getAttribute('data-title');
+        const desc = hs.getAttribute('data-desc');
+        const detailImg = hs.getAttribute('data-img');
+        modalTitle.textContent = title;
+        modalDesc.textContent = desc;
+        zoomImage.src = "../media/" + detailImg;
+        modalOverlay.classList.add('active');
+      });
+    });
+
+    closeModal.addEventListener('click', () => modalOverlay.classList.remove('active'));
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+  <script>
+    VANTA.FOG({
+      el: "#bg",
+      mouseControls: true, touchControls: true,
+      highlightColor: 0x1d3a33, midtoneColor: 0x0a1a14,
+      lowlightColor: 0x020b08, baseColor: 0x010504,
+      blurFactor: 0.5, speed: 0.2, zoom: 1.0
     });
   </script>
 </body>

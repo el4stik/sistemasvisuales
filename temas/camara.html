@@ -292,23 +292,52 @@
 
       ctx.save();
 
-      // Base clearing for ghost effect
+      // EFECTO FEEDBACK (El Ghost Potente)
       if (activeFX.has('ghost')) {
-        ctx.fillStyle = 'rgba(0,0,0,0.05)'; // Slower fade for longer tails
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalAlpha = 0.98; // Persistencia extrema (estelas casi infinitas)
+        ctx.save();
+        // Zoom Feedback Ultra-Pronunciado
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.scale(1.02, 1.02); // Crecimiento muy visible
+        ctx.translate(-canvas.width / 2, -canvas.height / 2);
+        ctx.drawImage(canvas, 0, 0);
+        ctx.restore();
       } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
 
-      // Apply global filters
+      // Rainbow (Estelas de colores dinámicas y masivas)
+      if (activeFX.has('rainbow')) {
+        const now = Date.now() * 0.05;
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+
+        // Capa 1: Rotación de color positiva + shift
+        ctx.globalAlpha = 0.5;
+        ctx.filter = `hue-rotate(${now % 360}deg) brightness(1.5) contrast(1.3) blur(1px)`;
+        ctx.drawImage(canvas, 15, 0);
+
+        // Capa 2: Rotación de color negativa + shift opuesto
+        ctx.filter = `hue-rotate(${(now * -0.8) % 360}deg) brightness(1.5) contrast(1.3) blur(1px)`;
+        ctx.drawImage(canvas, -15, 0);
+
+        // Capa 3: Feedback central (le da cuerpo al color)
+        ctx.globalAlpha = 0.3;
+        ctx.filter = `hue-rotate(${(now * 1.5) % 360}deg) saturate(200%)`;
+        ctx.drawImage(canvas, 0, 5);
+
+        ctx.restore();
+      }
+
+      // Aplicar filtros globales
       let filter = '';
       if (activeFX.has('bw')) filter += 'grayscale(100%) ';
       if (activeFX.has('invert')) filter += 'invert(100%) ';
-      if (activeFX.has('sharpen')) filter += 'contrast(200%) brightness(1.2) ';
+      if (activeFX.has('sharpen')) filter += 'contrast(250%) brightness(1.5) ';
       ctx.filter = filter || 'none';
 
-      // Opacidad del frame actual cuando hay ghosting
-      ctx.globalAlpha = activeFX.has('ghost') ? 0.35 : 1.0;
+      // Dibujo del frame actual (casi invisible para que resalten las estelas)
+      ctx.globalAlpha = activeFX.has('ghost') ? 0.12 : 1.0;
 
       const drawMirror = (h, v) => {
         ctx.save();
@@ -318,21 +347,16 @@
       };
 
       if (activeFX.has('kaleido')) {
-        // Quad Mirror
         ctx.save();
-        // Top Left
         ctx.drawImage(video, 0, 0, canvas.width / 2, canvas.height / 2);
-        // Top Right
         ctx.save();
         ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
         ctx.drawImage(video, 0, 0, canvas.width / 2, canvas.height / 2);
         ctx.restore();
-        // Bottom Left
         ctx.save();
         ctx.translate(0, canvas.height); ctx.scale(1, -1);
         ctx.drawImage(video, 0, 0, canvas.width / 2, canvas.height / 2);
         ctx.restore();
-        // Bottom Right
         ctx.save();
         ctx.translate(canvas.width, canvas.height); ctx.scale(-1, -1);
         ctx.drawImage(video, 0, 0, canvas.width / 2, canvas.height / 2);
@@ -346,16 +370,14 @@
 
       // Custom RGB Shift
       if (activeFX.has('rgb-shift')) {
-        const shift = 10;
+        const shift = 15; // Shift más fuerte
         ctx.globalCompositeOperation = 'screen';
         ctx.save();
-        ctx.filter = 'none'; // reset filter for manual channel shift
-        // Red
-        ctx.globalAlpha = 0.5;
+        ctx.filter = 'none';
+        ctx.globalAlpha = 0.6;
         ctx.fillStyle = '#f00';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(canvas, shift, 0);
-        // Blue
         ctx.fillStyle = '#00f';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(canvas, -shift, 0);
